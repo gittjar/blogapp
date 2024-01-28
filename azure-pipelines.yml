@@ -13,8 +13,7 @@ steps:
 - script: |
     cd blogapp-backend
     npm install
-    nohup node server.js &
-    sleep 20  # give server some time to start 20sec
+    npm start
   displayName: 'npm install and and run server.js'
 
 - task: ArchiveFiles@2
