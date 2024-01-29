@@ -1,0 +1,12 @@
+html {
+    background-color: #f2f4f8;
+}
+
+.main {
+    margin: 0 auto;
+    width: 90%;
+    padding: 20px;
+    background-color: #282c34;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
