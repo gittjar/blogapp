@@ -1,9 +1,3 @@
-trigger:
-- develop
-
-pool:
-  vmImage: ubuntu-latest
-
 steps:
 - task: NodeTool@0
   inputs:
@@ -13,8 +7,7 @@ steps:
 - script: |
     cd blogapp-backend
     npm install
-    npm start
-  displayName: 'npm install and and run server.js'
+  displayName: 'npm install'
 
 - task: ArchiveFiles@2
   inputs:
