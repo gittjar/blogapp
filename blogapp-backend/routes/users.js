@@ -64,7 +64,7 @@ router.put('/:username', async (req, res) => {
   }
 });
 
-// GET api/users/:id (get a user by id)
+// GET /api/users/:id (get the user's information along with the reading list)
 router.get('/:id', async (req, res) => {
   const userId = req.params.id;
 
@@ -76,12 +76,27 @@ router.get('/:id', async (req, res) => {
     
     let readingListResult = await pool.request()
       .input('userId', sql.Int, userId)
-      .query('SELECT blogs.* FROM reading_list JOIN blogs ON reading_list.blog_id = blogs.id WHERE reading_list.user_id = @userId');
+      .query(`
+        SELECT blogs.*, reading_list.id AS readingListId, reading_list.is_read AS [read]
+        FROM reading_list 
+        JOIN blogs ON reading_list.blog_id = blogs.id 
+        WHERE reading_list.user_id = @userId
+      `);
     
-    let user = userResult.recordset[0];
-    user.readings = readingListResult.recordset;
+    if (userResult.recordset.length > 0) {
+      let user = userResult.recordset[0];
+      user.readings = readingListResult.recordset.map(blog => ({
+        ...blog,
+        readinglists: [{
+          read: blog.read,
+          id: blog.readingListId
+        }]
+      }));
 
-    res.json(user);
+      res.json(user);
+    } else {
+      res.status(404).send('User not found');
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send('Error executing query');
