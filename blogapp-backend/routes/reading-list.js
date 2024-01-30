@@ -50,7 +50,7 @@ router.post('/', getUserFromToken, async (req, res) => {
   });
   
 // PUT /api/readinglists/:id (mark a blog as read)
-router.put('/:id', async (req, res) => {
+router.put('/:id', getUserFromToken, async (req, res) => {
     const readingListId = req.params.id;
     const { read } = req.body;
   
