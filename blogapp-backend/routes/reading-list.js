@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const getUserFromToken = require('../middleware/getUserFromToken');
 const sql = require('mssql');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
 const config = {
     user: 'kingdat4',
@@ -47,17 +49,38 @@ router.post('/', getUserFromToken, async (req, res) => {
     }
   });
   
-  // PUT /api/reading-list/:id (mark a blog as read)
-  router.put('/:id', getUserFromToken, async (req, res) => {
-    const { id } = req.params;
-    const userId = req.user.id;
+ // PUT /api/readinglists/:id (mark a blog as read)
+router.put('/:id', async (req, res) => {
+    const readingListId = req.params.id;
+    const { read } = req.body;
+  
+    // Extract user id from the token
+    const token = req.headers.authorization;
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    const userId = decodedToken.id;
   
     try {
       let pool = await sql.connect(config);
+  
+      // Check if the reading list item belongs to the user
+      let readingListItem = await pool.request()
+        .input('readingListId', sql.Int, readingListId)
+        .query('SELECT user_id FROM reading_list WHERE id = @readingListId');
+  
+      if (readingListItem.recordset.length === 0) {
+        return res.status(404).send('Reading list item not found');
+      }
+  
+      if (readingListItem.recordset[0].user_id !== userId) {
+        return res.status(403).send('You can only mark the blogs in your own reading list as read');
+      }
+  
+      // Update the reading list item
       await pool.request()
-        .input('id', sql.Int, id)
-        .input('userId', sql.Int, userId)
-        .query('UPDATE reading_list SET is_read = 1 WHERE id = @id AND user_id = @userId');
+        .input('readingListId', sql.Int, readingListId)
+        .input('read', sql.Bit, read)
+        .query('UPDATE reading_list SET is_read = @read WHERE id = @readingListId');
+  
       res.status(200).send('Blog marked as read');
     } catch (err) {
       console.error(err);
