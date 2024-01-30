@@ -64,4 +64,28 @@ router.put('/:username', async (req, res) => {
   }
 });
 
+// GET api/users/:id (get a user by id)
+router.get('/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    let pool = await sql.connect(config);
+    let userResult = await pool.request()
+      .input('userId', sql.Int, userId)
+      .query('SELECT name, username FROM users WHERE id = @userId');
+    
+    let readingListResult = await pool.request()
+      .input('userId', sql.Int, userId)
+      .query('SELECT blogs.* FROM reading_list JOIN blogs ON reading_list.blog_id = blogs.id WHERE reading_list.user_id = @userId');
+    
+    let user = userResult.recordset[0];
+    user.readings = readingListResult.recordset;
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error executing query');
+  }
+});
+
 module.exports = router;

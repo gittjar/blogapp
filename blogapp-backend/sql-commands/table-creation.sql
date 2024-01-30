@@ -17,9 +17,8 @@ CREATE TABLE blogs (
     FOREIGN KEY (userid) REFERENCES users(id)
 );
 
-
 CREATE TABLE reading_list (
-  id INT PRIMARY KEY,
+  id INT IDENTITY(1,1) PRIMARY KEY,
   user_id INT FOREIGN KEY REFERENCES users(id),
   blog_id INT FOREIGN KEY REFERENCES blogs(id),
   is_read BIT DEFAULT 0
