@@ -49,14 +49,26 @@ router.post('/', getUserFromToken, async (req, res) => {
     }
   });
   
- // PUT /api/readinglists/:id (mark a blog as read)
+// PUT /api/readinglists/:id (mark a blog as read)
 router.put('/:id', async (req, res) => {
     const readingListId = req.params.id;
     const { read } = req.body;
   
     // Extract user id from the token
     const token = req.headers.authorization;
-    const decodedToken = jwt.verify(token, process.env.SECRET);
+  
+    if (!token) {
+      return res.status(401).send('Token missing');
+    }
+  
+    let decodedToken;
+  
+    try {
+      decodedToken = jwt.verify(token, process.env.SECRET);
+    } catch (err) {
+      return res.status(401).send('Invalid token');
+    }
+  
     const userId = decodedToken.id;
   
     try {
