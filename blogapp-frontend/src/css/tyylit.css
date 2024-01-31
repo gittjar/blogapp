@@ -1,0 +1,75 @@
+html {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+input {
+    width: 10rem;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 1px 3px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+input:focus {
+    outline: none;
+}
+
+.login-button {
+    display: block; /* Make the button a block element */
+    margin: 0 auto; /* Center the button */
+    width: 10rem;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5506b4;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.login-button:hover {
+    background-color: #4d05a6;
+}
+
+/*
+MEDIA QUERIES
+*/
+
+@media screen and (max-width: 768px) {
+    .main {
+        flex-direction: column;
+        padding: 20px; /* Add some padding */
+    }
+
+    input, .login-button {
+        width: 100%; /* Make input fields and button take up the full width */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main {
+        flex-direction: column;
+        padding: 10px; /* Reduce padding for very small screens */
+    }
+
+    input, .login-button {
+        width: 100%; /* Make input fields and button take up the full width */
+    }
+}
