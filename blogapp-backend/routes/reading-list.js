@@ -79,7 +79,7 @@ router.put('/:id', getUserFromToken, async (req, res) => {
       .input('read', sql.Bit, read)
       .query('UPDATE reading_list SET is_read = @read WHERE id = @readingListId');
 
-    res.status(200).send('Blog marked as read');
+    res.status(200).send('Blog marked successfully!');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error executing query');

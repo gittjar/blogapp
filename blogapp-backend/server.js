@@ -5,6 +5,7 @@ const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 const readingListRouter = require('./routes/reading-list');
 const cors = require('cors');
+require('dotenv').config();
 
 app.use(express.json());
 app.use(cors());

@@ -4,6 +4,8 @@ const sql = require('mssql');
 const sha256 = require('crypto-js/sha256');
 const hmacSHA512 = require('crypto-js/hmac-sha512');
 const Base64 = require('crypto-js/enc-base64');
+const getUserFromToken = require('../middleware/getUserFromToken');
+require('dotenv').config();
 
 const config = {
     user: 'kingdat4',
@@ -64,6 +66,7 @@ router.put('/:username', async (req, res) => {
   }
 });
 
+
 // GET /api/users/:id (get the user's information along with the reading list)
 router.get('/:id', async (req, res) => {
   const userId = req.params.id;
@@ -97,6 +100,35 @@ router.get('/:id', async (req, res) => {
     } else {
       res.status(404).send('User not found');
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error executing query');
+  }
+});
+
+// GET /api/users/:id?read=true or /api/users/:id?read=false (get the user's reading list)
+router.get('/:id', getUserFromToken, async (req, res) => {
+  const userId = req.params.id;
+
+  // Get the 'read' query parameter
+  const read = req.query.read;
+
+  try {
+    let pool = await sql.connect(config);
+
+    // Build the query
+    let query = 'SELECT * FROM reading_list WHERE user_id = @userId';
+    if (read !== undefined) {
+      query += ' AND is_read = @read';
+    }
+
+    // Execute the query
+    let result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('read', sql.Bit, read === 'true')
+      .query(query);
+
+    res.status(200).json(result.recordset);
   } catch (err) {
     console.error(err);
     res.status(500).send('Error executing query');
