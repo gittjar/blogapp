@@ -53,6 +53,7 @@ class CreateBlog extends React.Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
+        <div className='content'>
         <h2>Create a new blog</h2>
         <div className='create-blog'>
         <label>
@@ -76,7 +77,7 @@ class CreateBlog extends React.Component {
         </label>
         <br></br>
         <button type="submit" className='l-button'>Create blog</button>
-        </div>
+        </div></div>
       </form>
 
     );

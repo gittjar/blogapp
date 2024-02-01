@@ -2,17 +2,35 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const UserData = ({ userData }) => {
+const UserData = () => {
   const [users, setUsers] = useState([]);
+  const [userData, setUserData] = useState(null); // Define userData and setUserData
+  const [notification, setNotification] = useState(null);
+  const userId = Number(localStorage.getItem('userId')); // Parse userId to a number
+
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await axios.get('https://blogapp-backend-e23a.onrender.com/api/users');
-      setUsers(response.data);
+    const fetchUserData = async () => {
+      if (userId) { // Only fetch user data if userId is not null
+        try {
+          const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/users/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+          });
+          setUserData(response.data);
+        } catch (error) {
+          console.error('Failed to fetch user data', error);
+        }
+      }
     };
 
-    fetchUsers();
-  }, []);
+    fetchUserData();
+  }, [userId]);
+
+  if (!userData) {
+    return <div>Loading...</div>; // Render loading state
+  }
 
   const getUserName = (id) => {
     const user = users.find(user => user.id === id);
@@ -26,17 +44,21 @@ const UserData = ({ userData }) => {
           Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
       });
-      alert('Blog removed from reading list');
+      setNotification('Blog removed from reading list');
+      setTimeout(() => setNotification(null), 5000); // Remove notification after 5 seconds
     } catch (error) {
       console.error('Failed to remove blog from reading list', error);
+      setNotification('Failed to remove blog from reading list');
+      setTimeout(() => setNotification(null), 5000); // Remove notification after 5 seconds
     }
   };
 
   
 
   return (
-    <div>
+    <div className='content'>
       <h3>My data</h3>
+      {notification && <div className="notification">{notification}</div>}
       <table className="user-data-table">
         <tr>
           <th>Name</th>
@@ -57,7 +79,7 @@ const UserData = ({ userData }) => {
                 <p>URL: {reading.url}</p>
                 <p>Likes: {reading.likes}</p>
                 <p>Read: {reading.read ? 'Yes' : 'No'}</p>
-                <button onClick={() => removeBlogFromReadingList(reading.readingListId)}>Remove from list</button>
+                <button className='l-button' onClick={() => removeBlogFromReadingList(reading.readingListId)}>Remove from list</button>
 
               </div>
             ))}

@@ -6,7 +6,29 @@ html {
     color: #90ee90;
 }
 
-.blogs {
+nav {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    padding: 20px;
+    background-color: #111;
+    color: #90ee90;
+}
+
+a {
+    text-decoration: none;
+    color: #90ee90;
+    margin: 10px;
+}
+
+.notification {
+   border: #90ee90 1px solid;
+   padding: 1rem;
+    margin-bottom: 1rem;
+    width: fit-content;
+}
+
+.content {
    margin-left: 1rem;
    margin-right: 1rem;
    border: #90ee90 1px solid;
@@ -92,7 +114,7 @@ input:focus {
 
 .l-button {
     display: block;
-    margin: 0 auto;
+    margin-top: 10px;
     border: 1px solid #90ee90;
     width: 10rem;
     padding: 10px;

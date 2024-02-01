@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
-import CreateBlog from './CreateBlog';
-import UserData from './UserData';
+
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -92,18 +91,21 @@ const BlogPage = () => {
   };
 
   return (
-    <div className='blogs'>
-      <h1>Blog App</h1>
+    <div className='content'>
+
       {userData ? (
         <>
           <h3>Hello, {userData.username}! You're logged in!</h3>
-          <button onClick={handleLogout}>Logout</button>
-          {userData && <UserData userData={userData} />}
-          <CreateBlog /> 
+          <button onClick={handleLogout} className='l-button'>Logout</button>
+          
+          {}
+          
         </>
       ) : (
-        <Link to="/login">Login</Link>
-      )}
+        <>
+          <h3>You're not logged in</h3>
+          <Link to='/login' className='l-button'>Login</Link>
+        </>)}
 
 <h2>Blogs</h2>
       <div className='blogcard-content'>
@@ -111,15 +113,16 @@ const BlogPage = () => {
 
       {blogs.map((blog) => (
         <div key={blog.id} className='blogcard'>
-        <button onClick={() => addBlogToReadingList(blog.id)}>Add to list</button>
 
-          <hr></hr>
+          
           <h3>{blog.title}</h3>
           <p>{blog.url}</p>
           <p>Writer: {blog.username}</p>
           <p>Likes: {blog.likes}</p>
           <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true)}></button>
           <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false)}></button>
+          <button onClick={() => addBlogToReadingList(blog.id)} className='l-button'>Add to list</button>
+
         </div>
         
       ))}
