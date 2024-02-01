@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import CreateBlog from './CreateBlog';
+import UserData from './UserData';
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -75,30 +76,54 @@ const BlogPage = () => {
     }
   };
 
+  const addBlogToReadingList = async (blogId) => {
+    try {
+      await axios.post('https://blogapp-backend-e23a.onrender.com/api/reading-list', {
+        blogId: blogId
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+      });
+      alert('Blog added to reading list');
+    } catch (error) {
+      console.error('Failed to add blog to reading list', error);
+    }
+  };
+
   return (
-    <div>
+    <div className='blogs'>
       <h1>Blog App</h1>
-      <h2>Blogs</h2>
       {userData ? (
         <>
           <h3>Hello, {userData.username}! You're logged in!</h3>
           <button onClick={handleLogout}>Logout</button>
+          {userData && <UserData userData={userData} />}
           <CreateBlog /> 
         </>
       ) : (
         <Link to="/login">Login</Link>
       )}
-      {userData && <div>Your data: {JSON.stringify(userData)}</div>}
+
+<h2>Blogs</h2>
+      <div className='blogcard-content'>
+      
+
       {blogs.map((blog) => (
-        <div key={blog.id}>
+        <div key={blog.id} className='blogcard'>
+        <button onClick={() => addBlogToReadingList(blog.id)}>Add to list</button>
+
+          <hr></hr>
           <h3>{blog.title}</h3>
           <p>{blog.url}</p>
-          <p>Author: {blog.username}</p>
+          <p>Writer: {blog.username}</p>
           <p>Likes: {blog.likes}</p>
-          <button onClick={() => handleLikeChange(blog.id, blog.likes, true)}>+</button>
-          <button onClick={() => handleLikeChange(blog.id, blog.likes, false)}>-</button>
+          <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true)}></button>
+          <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false)}></button>
         </div>
+        
       ))}
+      </div>
     </div>
   );
 };

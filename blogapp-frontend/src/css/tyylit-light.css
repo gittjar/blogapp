@@ -2,15 +2,14 @@ html {
     font-family: 'Verdana', sans-serif;
     font-size: 16px;
     box-sizing: border-box;
-    background-color: #111;
-    color: #90ee90;
 }
 
 .blogs {
    margin-left: 1rem;
-   margin-right: 1rem;
-   border: #90ee90 1px solid;
+    margin-right: 1rem;
+   border: #4d05a6 1px solid;
    padding: 1rem;
+   
 }
 
 h2 {
@@ -23,7 +22,7 @@ h2 {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #111;
+    background-color: #f5f5f5;
 }
 
 .create-blog {
@@ -33,14 +32,15 @@ h2 {
     height: fit-content;
     padding: 20px;
     border-radius: 5px;
-    background-color: #111;
-    box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+    background-color: #fff;
+    box-shadow: 2px 3px 3ch 2px rgba(0, 0, 0, 0.2);
+
 }
 
 .blogcard-content {
     display: flex;
     flex-direction: wrap;
-    background-color: #111;
+    background-color: #fff;
 }
 
 .blogcard {
@@ -51,8 +51,8 @@ h2 {
     height: 18rem;
     padding: 20px;
     border-radius: 5px;
-    background-color: #111;
-    box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+    background-color: #fff;
+    box-shadow: 2px 3px 3ch 2px rgba(0, 0, 0, 0.2);
 }
 
 input {
@@ -61,9 +61,7 @@ input {
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 1px 3px 1px 1px rgba(0, 100, 0, 0.2);
-    background-color: #222;
-    color: #90ee90;
+    box-shadow: 1px 3px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 input:focus {
@@ -75,8 +73,7 @@ input:focus {
     margin-right: 3px;
     cursor: pointer;
     border: none;
-    background-color: #d00404;
-    color: #90ee90;
+    background-color: red;
     border-radius: 5px;
 }
 
@@ -85,70 +82,74 @@ input:focus {
     margin-right: 3px;
     cursor: pointer;
     border: none;
-    background-color: #0ed107;
-    color: #90ee90;
+    background-color: rgb(12, 236, 42);
     border-radius: 5px;
+
 }
 
+
 .l-button {
-    display: block;
-    margin: 0 auto;
-    border: 1px solid #90ee90;
+    display: block; /* Make the button a block element */
+    margin: 0 auto; /* Center the button */
     width: 10rem;
     padding: 10px;
+    border: none;
     border-radius: 5px;
-    background-color: #000;
-    color: #90ee90;
+    background-color: #5506b4;
+    color: #fff;
     font-size: 16px;
     cursor: pointer;
     text-align: center;
 }
 
 .l-button:hover {
-    background-color: #181818;
+    background-color: #4d05a6;
 }
 
 .user-data-table {
     border-collapse: collapse;
     width: 80%;
-    color: #90ee90;
-}
+  }
   
-.user-data-table th, .user-data-table td {
-    border: 1px solid #90ee90;
+  .user-data-table th, .user-data-table td {
+    border: 1px solid #ddd;
     padding: 8px;
-}
+  }
   
-.reading {
+  .reading {
     padding-left: 10px;
-}
+  }
   
-.light-row {
-    background-color: #222;
-}
+  .light-row {
+    background-color: #f2f2f2;
+  }
   
-.dark-row {
-    background-color: #333;
-}
+  .dark-row {
+    background-color: #ddd;
+  }
+
+/*
+MEDIA QUERIES
+*/
 
 @media screen and (max-width: 768px) {
     .main {
         flex-direction: column;
-        padding: 20px;
+        padding: 20px; /* Add some padding */
     }
 
     input, .login-button {
-        width: 100%;
+        width: 100%; /* Make input fields and button take up the full width */
     }
 }
 
 @media screen and (max-width: 480px) {
     .main {
         flex-direction: column;
-        padding: 10px;
+        padding: 10px; /* Reduce padding for very small screens */
     }
 
     input, .login-button {
-        width: 100%;
+        width: 100%; /* Make input fields and button take up the full width */
     }
 }

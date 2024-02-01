@@ -54,29 +54,31 @@ class CreateBlog extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <h2>Create a new blog</h2>
-
+        <div className='create-blog'>
         <label>
-          Author:
+          Author:<br></br>
           <input type="text" value={this.state.author} onChange={this.handleAuthorChange} />
         </label>
-
+        <br></br>
         <label>
-          Title:
+          Title:<br></br>
           <input type="text" value={this.state.title} onChange={this.handleTitleChange} />
         </label>
-
+        <br></br>
         <label>
-          Likes:
+          Likes:<br></br>
           <input type="number" value={this.state.likes} onChange={this.handleLikesChange} />
         </label>
-
+        <br></br>
         <label>
-          URL:
+          URL:<br></br>
           <input type="text" value={this.state.url} onChange={this.handleUrlChange} />
         </label>
-
-        <button type="submit">Create blog</button>
+        <br></br>
+        <button type="submit" className='l-button'>Create blog</button>
+        </div>
       </form>
+
     );
   }
 }
