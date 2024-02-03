@@ -113,15 +113,35 @@ nav {
     color: #90ee90;
 }
 
-
-
+/*CREATION USER or BLOG*/
+.creation-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('../kuvat/matrix-5.jpeg') no-repeat center center fixed; 
+    background-size: cover;
+  }
+  .creation-form div {
+    font-size: 1.2rem;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 3rem;
+    border-radius: 15px;
+    margin: 0.9rem;
+    box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
 
 
 
 .notification {
    border: #90ee90 1px solid;
-   padding: 1rem;
-    margin-bottom: 1rem;
+   padding: 0.3rem;
+    margin-bottom: 0.4rem;
     width: fit-content;
 }
 

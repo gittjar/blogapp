@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import CustomSwitch from './CustomSwitch';
 
 const UserData = () => {
   const [users, setUsers] = useState([]);
@@ -24,27 +25,30 @@ const UserData = () => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (userId) {
-        try {
-          const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/users/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-            },
-          });
-          setUserData(response.data);
-        } catch (error) {
-          console.error('Failed to fetch user data', error);
-        }
-      }
-    };
+  const fetchUserData = async () => {
+    if (userId) {
+      try {
+        const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
 
+          },
+          
+        });
+        console.log(response.data); 
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user data', error);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
   }, [userId]);
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return <div>Loading... try log in or create new user?</div>;
   }
 
   const getUserName = (id) => {
@@ -61,9 +65,29 @@ const UserData = () => {
       });
       setNotification('Blog removed from reading list');
       setTimeout(() => setNotification(null), 5000);
+      fetchUserData();
     } catch (error) {
       console.error('Failed to remove blog from reading list', error);
       setNotification('Failed to remove blog from reading list');
+      setTimeout(() => setNotification(null), 5000);
+    }
+  };
+
+  const handleReadChange = async (readingListId, read) => {
+    try {
+      await axios.put(`https://blogapp-backend-e23a.onrender.com/api/reading-list/${readingListId}`, {
+        read: !read
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+      });
+      setNotification('Reading status updated');
+      setTimeout(() => setNotification(null), 5000);
+      fetchUserData();
+    } catch (error) {
+      console.error('Failed to update reading status', error);
+      setNotification('Failed to update reading status');
       setTimeout(() => setNotification(null), 5000);
     }
   };
@@ -82,6 +106,9 @@ const UserData = () => {
             <th>Username</th>
             <td>{userData.username}</td>
           </tr>
+          <tr>
+            <th>Created</th>
+            <td>{userData.created_at ? new Date(userData.created_at).toLocaleDateString() : 'Loading...'}</td>            </tr>
         </tbody>
       </table>
       <h3>Readings</h3>
@@ -105,7 +132,13 @@ const UserData = () => {
               <td>{getUserName(reading.userid)}</td>
               <td>{reading.url}</td>
               <td>{reading.likes}</td>
-              <td>{reading.read ? 'Yes' : 'No'}</td>
+              <td>
+              <CustomSwitch
+                checked={reading.read}
+                onChange={() => handleReadChange(reading.readingListId, reading.read)}
+                inputProps={{ 'aria-label': 'controlled' }}
+              />
+              </td>
               <td>
                 <button className='l-button' onClick={() => removeBlogFromReadingList(reading.readingListId)}>Remove from list</button>
               </td>
