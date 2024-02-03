@@ -58,6 +58,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+   
   
 }
 
@@ -67,6 +68,7 @@ nav {
     padding: 1rem;
     border-radius: 15px;
     box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+    margin-top: 0.4rem;
     
 }
 
@@ -199,6 +201,14 @@ h3 {
     border-radius: 5px;
     background-color: #111;
     box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+}
+
+.cpasw {
+    background-color: black;
+    border-radius: 0;
+    border: 0;
+    margin-top: 0.4rem;
+    border: 1px solid #90ee90;
 }
 
 input {

@@ -45,20 +45,20 @@ const CreateUser = () => {
         {notification && <div className="notification">{notification}</div>}
         <form onSubmit={handleSubmit}>
           <label>
-            Name:<br></br>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            Your Name<br></br>
+            <input className='cpasw' type="text" value={name} onChange={(e) => setName(e.target.value)} required />
           </label>
           <label><br></br>
-            Username:<br></br>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+            Username<br></br>
+            <input className='cpasw'  type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
           </label>
           <label><br></br>
-            Password:<br></br>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            Password<br></br>
+            <input className='cpasw'  type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </label>
           <label><br></br>
-            Confirm Password:<br></br>
-            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+            Password again<br></br>
+            <input className='cpasw'  type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
           </label><br></br>
           <button type="submit" className='loginbutton'>Create User</button>
         </form>
