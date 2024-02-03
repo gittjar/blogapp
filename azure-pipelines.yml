@@ -25,6 +25,8 @@ stages:
   displayName: Build stage
   jobs:
   - job: Build
+    timeoutInMinutes: 90
+
     displayName: Build
     pool:
       vmImage: $(vmImageName)
@@ -35,12 +37,20 @@ stages:
         versionSpec: '18.x'
       displayName: 'Install Node.js'
 
+    - task: Cache@2
+      inputs:
+        key: 'npm | "$(Agent.OS)" | package-lock.json'
+        restoreKeys: |
+          npm | "$(Agent.OS)"
+        path: $(Pipeline.Workspace)/.npm
+      displayName: Cache npm dependencies
+
     - script: |
-        cd blogapp-frontend/
-        npm install
-        npm run build --if-present
-        npm run test --if-present
-      displayName: 'npm install, build and test'
+    cd blogapp-frontend/
+    npm install
+    npm run build --if-present
+    npm run test --if-present
+  displayName: 'npm install, build and test'
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
