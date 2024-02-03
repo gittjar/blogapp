@@ -36,7 +36,7 @@ stages:
       displayName: 'Install Node.js'
 
     - script: |
-        cd blog-app-with-azure-sql/blogapp-frontend/
+        cd blogapp-frontend/
         npm install
         npm run build --if-present
         npm run test --if-present
@@ -45,7 +45,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
-        rootFolderOrFile: 'blog-app-with-azure-sql/blogapp-frontend/build'
+        rootFolderOrFile: 'blogapp-frontend/build'
         includeRootFolder: false
         archiveType: zip
         archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
