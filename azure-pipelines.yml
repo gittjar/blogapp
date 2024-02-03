@@ -42,7 +42,7 @@ stages:
         key: 'npm | "$(Agent.OS)" | blogapp-frontend/package-lock.json'
         restoreKeys: |
           npm | "$(Agent.OS)"
-        path: $(Pipeline.Workspace)/.npm
+        path: $(Pipeline.Workspace)/blogapp-frontend/node_modules
       displayName: Cache npm dependencies
 
     - script: |
