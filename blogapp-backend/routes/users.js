@@ -75,7 +75,7 @@ router.get('/:id', async (req, res) => {
     let pool = await sql.connect(config);
     let userResult = await pool.request()
       .input('userId', sql.Int, userId)
-      .query('SELECT name, username FROM users WHERE id = @userId');
+      .query('SELECT name, username, created_at FROM users WHERE id = @userId');
     
     let readingListResult = await pool.request()
       .input('userId', sql.Int, userId)
