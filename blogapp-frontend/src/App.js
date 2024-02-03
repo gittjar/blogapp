@@ -5,6 +5,7 @@ import LoginPage from './components/LoginPage';
 import UserData from './components/UserData';
 import CreateBlog from './components/CreateBlog';
 import BlogPage from './components/BlogPage';
+import CreateUser from './components/CreateUser';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/user-data" element={<UserData />} />
       <Route path="/create-blog" element={<CreateBlog />} />
+      <Route path="/create-user" element={<CreateUser />} />
     </Routes>
   </Router>
   );

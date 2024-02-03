@@ -1,17 +1,32 @@
-// UserData.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const UserData = () => {
   const [users, setUsers] = useState([]);
-  const [userData, setUserData] = useState(null); // Define userData and setUserData
+  const [userData, setUserData] = useState(null);
   const [notification, setNotification] = useState(null);
-  const userId = Number(localStorage.getItem('userId')); // Parse userId to a number
+  const userId = Number(localStorage.getItem('userId'));
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('https://blogapp-backend-e23a.onrender.com/api/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        });
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Failed to fetch users', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (userId) { // Only fetch user data if userId is not null
+      if (userId) {
         try {
           const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/users/${userId}`, {
             headers: {
@@ -29,7 +44,7 @@ const UserData = () => {
   }, [userId]);
 
   if (!userData) {
-    return <div>Loading...</div>; // Render loading state
+    return <div>Loading...</div>;
   }
 
   const getUserName = (id) => {
@@ -45,46 +60,58 @@ const UserData = () => {
         },
       });
       setNotification('Blog removed from reading list');
-      setTimeout(() => setNotification(null), 5000); // Remove notification after 5 seconds
+      setTimeout(() => setNotification(null), 5000);
     } catch (error) {
       console.error('Failed to remove blog from reading list', error);
       setNotification('Failed to remove blog from reading list');
-      setTimeout(() => setNotification(null), 5000); // Remove notification after 5 seconds
+      setTimeout(() => setNotification(null), 5000);
     }
   };
-
-  
 
   return (
     <div className='content'>
       <h3>My data</h3>
       {notification && <div className="notification">{notification}</div>}
       <table className="user-data-table">
-        <tr>
-          <th>Name</th>
-          <td>{userData.name}</td>
-        </tr>
-        <tr>
-          <th>Username</th>
-          <td>{userData.username}</td>
-        </tr>
-        <tr>
-          <th>Readings</th>
-          <td>
-            {userData.readings.map((reading, index) => (
-              <div key={index} className={`reading ${index % 2 === 0 ? 'light-row' : 'dark-row'}`}>
-                <p>Title: {reading.title}</p>
-                <p>Author: {reading.author}</p>
-                <p>Writer: {getUserName(reading.userid)}</p>
-                <p>URL: {reading.url}</p>
-                <p>Likes: {reading.likes}</p>
-                <p>Read: {reading.read ? 'Yes' : 'No'}</p>
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <td>{userData.name}</td>
+          </tr>
+          <tr>
+            <th>Username</th>
+            <td>{userData.username}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Readings</h3>
+      <table className="user-data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Writer</th>
+            <th>URL</th>
+            <th>Likes</th>
+            <th>Read</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userData.readings.map((reading, index) => (
+            <tr key={index}>
+              <td>{reading.title}</td>
+              <td>{reading.author}</td>
+              <td>{getUserName(reading.userid)}</td>
+              <td>{reading.url}</td>
+              <td>{reading.likes}</td>
+              <td>{reading.read ? 'Yes' : 'No'}</td>
+              <td>
                 <button className='l-button' onClick={() => removeBlogFromReadingList(reading.readingListId)}>Remove from list</button>
-
-              </div>
-            ))}
-          </td>
-        </tr>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );

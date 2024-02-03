@@ -48,7 +48,12 @@ class CreateBlog extends React.Component {
     const userId = localStorage.getItem('userId');
 
     if (!userId) {
-      return <p>Please log in to create a blog.</p>;
+      return <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+      fontSize: '1.4rem',
+     }}>Please log in to create a blog.</div>;
     }
 
     return (

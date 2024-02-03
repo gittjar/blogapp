@@ -6,6 +6,7 @@ html {
     color: #90ee90;
 }
 
+
 nav {
     display: flex;
     flex-direction: row;
@@ -15,11 +16,107 @@ nav {
     color: #90ee90;
 }
 
-a {
-    text-decoration: none;
+.header-link {
+    font-size: 1.2rem;
+    font-weight: 800;
     color: #90ee90;
-    margin: 10px;
+    text-decoration: none;
+    margin: 0 10px;
 }
+.header-link:hover {
+    color: #07e05e;
+}
+
+.background-image-main {
+    background-image: url('../kuvat/matrix-1.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Adjust as needed */
+    width: 100%; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+.background-image-main div {
+  font-size: 3rem;
+  background: rgba(0, 0, 0, 0.4);
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+    
+}
+
+/* BLOGS PAGE */
+.background-image {
+    background-image: url('../kuvat/matrix-2.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 100%; /* Adjust as needed */
+    width: 100%; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+.background-image div {
+  font-size: 1.2rem;
+  background: rgba(0, 0, 0, 0.45);
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+    
+}
+
+/* LOGIN PAGE */
+.background-image-login {
+    background-image: url('../kuvat/matrix-4.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Adjust as needed */
+    width: 100%; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+
+}
+
+.background-image-login div {
+  font-size: 1.2rem;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 3rem;
+  border-radius: 15px;
+  margin: 0.9rem;
+  box-shadow: 2px 3px 3ch 2px rgba(0, 100, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.loginbutton {
+    padding: 12px;
+    cursor: pointer;
+    border: none;
+    background-color: #07e05e;
+    color: #222;
+    border-radius: 5px;
+}
+
+.loginbutton:hover {
+    background-color: #222;
+    color: #90ee90;
+}
+
+
+
+
+
 
 .notification {
    border: #90ee90 1px solid;
@@ -33,11 +130,18 @@ a {
    margin-right: 1rem;
    border: #90ee90 1px solid;
    padding: 1rem;
+
 }
 
 h2 {
     text-align: left;
     margin-bottom: 30px;
+}
+
+h3 {
+    text-align: left;
+    margin-bottom: 30px;
+    color: #a80089;
 }
 
 .main {
@@ -60,8 +164,8 @@ h2 {
 }
 
 .blogcard-content {
-    display: flex;
-    flex-direction: wrap;
+    display: grid;
+    grid-template-columns: 0.1fr 0.1fr 0.1fr;
     background-color: #111;
 }
 
@@ -70,7 +174,7 @@ h2 {
     justify-content: center;
     align-items: center;
     width: 15rem;
-    height: 18rem;
+    height: 22rem;
     padding: 20px;
     border-radius: 5px;
     background-color: #111;
@@ -114,6 +218,7 @@ input:focus {
 
 .l-button {
     display: block;
+    
     margin-top: 10px;
     border: 1px solid #90ee90;
     width: 10rem;
@@ -130,14 +235,28 @@ input:focus {
     background-color: #181818;
 }
 
-.user-data-table {
-    border-collapse: collapse;
-    width: 80%;
+.logout-button {
+    color: #222;
+    background-color: #90ee90;
+    margin-left:    10px ;
+    padding: 8px;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.logout-button:hover {
+    background-color: #222;
     color: #90ee90;
+}
+
+.user-data-table {
+    width: 100%;
+    color: #90ee90;
+    text-align: left;
 }
   
 .user-data-table th, .user-data-table td {
-    border: 1px solid #90ee90;
+    border-bottom: 1px dashed #4a804a;
     padding: 8px;
 }
   

@@ -27,23 +27,31 @@ const LoginPage = () => {
     }
   };
 
-  return (
-    <div className="content">
-      <h2>Login</h2>
-      <div className="main">
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username</label><br></br>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        </div>
-        <div>
-          <label>Password</label><br></br>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        {error && <p>{error}</p>}
-        <button type="submit" className='l-button'>Login</button>
-      </form>
-    </div>
+    return (
+      <div className="background-image-login">
+      <div className="content" >
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          {error && <div className="error">{error}</div>}
+         
+            <label>Username</label><br></br>
+            <article>
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+            </article>
+          
+            <label>Password</label>
+            <br></br>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <br></br>
+        <span >
+         <button type="submit" class='loginbutton'>Login</button>
+         </span>
+
+        
+
+         
+        </form>
+      </div>
     </div>
   );
 };
