@@ -302,24 +302,35 @@ input:focus {
     background-color: #333;
 }
 
-@media screen and (max-width: 768px) {
-    .main {
-        flex-direction: column;
-        padding: 20px;
-    }
+/* Mobile CSS rules */ 
+@media only screen and (max-width: 425px) { 
 
-    input, .login-button {
-        width: 100%;
+    body {
+        background-color: black;
+        font-size: larger;
+        font-weight: 700;
     }
+   
+
 }
 
-@media screen and (max-width: 480px) {
-    .main {
-        flex-direction: column;
-        padding: 10px;
+/* Tablet CSS rules */ 
+@media only screen and (min-width: 426px) { 
+
+    table {
+        width: auto;
     }
 
-    input, .login-button {
-        width: 100%;
+    body {
+        background-color: black;
+        font-size: larger;
     }
+
+    
 }
+
+
+
+
+/* Desktop CSS rules */ 
+@media only screen and (min-width: 769px) { body { background-color: black; } }
