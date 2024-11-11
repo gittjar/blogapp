@@ -95,22 +95,25 @@ const UserData = () => {
   return (
     <div className='content'>
       <h3>My data</h3>
-      {notification && <div className="notification">{notification}</div>}
-      <table className="user-data-table">
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <td>{userData.name}</td>
-          </tr>
-          <tr>
-            <th>Username</th>
-            <td>{userData.username}</td>
-          </tr>
-          <tr>
-            <th>Created</th>
-            <td>{userData.created_at ? new Date(userData.created_at).toLocaleDateString() : 'Loading...'}</td>            </tr>
-        </tbody>
-      </table>
+      <div className="card">
+  {notification && <div className="notification">{notification}</div>}
+  <table className="user-data-table">
+    <tbody>
+      <tr>
+        <th>Name</th>
+        <td>{userData.name}</td>
+      </tr>
+      <tr>
+        <th>Username</th>
+        <td>{userData.username}</td>
+      </tr>
+      <tr>
+        <th>Created</th>
+        <td>{userData.created_at ? new Date(userData.created_at).toLocaleDateString() : 'Loading...'}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
       <h3>Readings</h3>
       <table className="user-data-table">
         <thead>
