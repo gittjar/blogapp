@@ -61,8 +61,8 @@ nav {
     font-size: 1.2rem;
     background: rgba(255, 255, 255, 0.8);
     padding: 1rem;
-    border-radius: 15px;
-    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;/*
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);*/
     margin-top: 0.4rem;
 }
 
@@ -143,12 +143,12 @@ nav {
     border: #007bff 1px solid;
     padding: 1rem;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
 }
 
 h2, h3 {
     text-align: left;
-    margin-bottom: 30px;
+    margin-bottom: 0.1rem;
 }
 
 h3 {
@@ -174,84 +174,90 @@ h3 {
     box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-.blogcard-content {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    background-color: #fff;
-}
-
 .blogcard {
     margin: 4px;
-    justify-content: center;
-    align-items: center;
-    width: 15rem;
-    height: 22rem;
+    display: flex;
+    flex-direction: column;
+    width: 94%;
     padding: 20px;
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);
-}
 
-.cpasw {
-    background-color: #fff;
-    border-radius: 0;
-    border: 1px solid #007bff;
-    margin-top: 0.4rem;
-}
-
-input {
-    width: 10rem;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
+  }
+  
+  .blogcardheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .header-left {
+    align-items: center;
+    padding-right: 0.5rem;
+    border-left: orchid 1px solid;
+    border-bottom: orchid 3px solid;
     border-radius: 5px;
-    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    color: #333;
-}
 
-input:focus {
-    outline: none;
-    border-color: #007bff;
-}
+  }
+  
+  .blogcardcontent {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .blogcardactions {
+    width: 100%;
+  }
 
-.like-button-red {
-    padding: 12px;
-    margin-right: 3px;
-    cursor: pointer;
+  
+  .blog-card-text {
+    margin-left: 0.4rem;
+    font-size: 0.9rem;
+  }
+  
+  .delete-link-button, .like-button-green, .like-button-red, .l-button {
+    padding: 5px 10px;
     border: none;
-    background-color: #d00404;
-    color: #fff;
-    border-radius: 5px;
-}
-
-.like-button-green {
-    padding: 12px;
-    margin-right: 3px;
+    border-radius: 3px;
     cursor: pointer;
+  }
+  
+  .delete-link-button {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .like-button-green {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .like-button-red {
+    background-color: #f8d7da;
+    margin-left: 3px;
+    color: #721c24;
+  }
+  
+  .l-button {
+    background-color: #d1ecf1;
+    margin-left: 3px;
+    color: #0c5460;
+  }
+
+.delete-link-button {
+
     border: none;
-    background-color: #0ed107;
-    color: #fff;
-    border-radius: 5px;
+    color: #d00404;
+    background-color:  transparent  ;
 }
 
-.l-button {
-    display: block;
-    margin-top: 10px;
-    border: 1px solid #007bff;
-    width: 10rem;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #007bff;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.l-button:hover {
-    background-color: #e9f7ff;
-}
+.delete-link-button:hover {
+    text-decoration: underline;}
 
 .logout-button {
     color: #fff;
@@ -270,7 +276,7 @@ input:focus {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
     background-color: #fff;
     max-width: 400px;
     margin: 20px auto;

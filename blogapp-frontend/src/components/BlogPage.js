@@ -95,17 +95,28 @@ const BlogPage = () => {
         {notification && <div className="notification">{notification}</div>}
         <div className='blogcard-content'>
           {blogs.map((blog) => (
-            <div key={blog.id} className='blogcard'>
-              <h3>{blog.title}</h3>
-              <p>{blog.url}</p>
-              <p>Writer: {blog.username}</p>
-              <p>Likes: {blog.likes}</p>
-              <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true)}></button>
-              <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false)}></button>
-              <button onClick={() => addBlogToReadingList(blog.id)} className='l-button'>Add to list</button>
+              <div key={blog.id} className='blogcard'>
+              <section className='blogcardheader'>
+                <article className='header-left'>
+            
+                  <p className='blog-card-text'>Likes {blog.likes}</p>
+                </article>
+                <h3>{blog.title}</h3>
+              </section>
+              <section className='blogcardcontent'>
+                <p className='blog-card-text'>{blog.url}</p>
+                <p className='blog-card-text'>Writer: {blog.username}</p>
+              </section>
+              <section className='blogcardactions'>
+                <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true)}>Like</button>
+                <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false)}>Dislike</button>
+                <button onClick={() => addBlogToReadingList(blog.id)} className='l-button'>Add to list</button>
+              </section>
+              
               {userId === blog.userid && (
-      <button onClick={() => deleteBlog(blog.id)} className='l-button'>Delete</button>
-    )}
+                    <button onClick={() => deleteBlog(blog.id)} className='delete-link-button'>Delete</button>
+                  )}
+                  
             </div>
           ))}
         </div>
