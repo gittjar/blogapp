@@ -25,7 +25,7 @@ const BlogPage = () => {
     fetchBlogs();
   }, []);
 
-  const handleLikeChange = async (id, likes, increment) => {
+  const handleLikeChange = async (id, likes, increment, blogName) => {
     try {
       await axios.put(`https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`, {
         likes: increment ? likes + 1 : Math.max(0, likes - 1),
@@ -40,12 +40,14 @@ const BlogPage = () => {
         },
       });
       setBlogs(response.data);
+      setNotification(`Blog "${blogName}" ${increment ? '+1 like' : '-1 dislike'}`);
+      setTimeout(() => setNotification(null), 5000);
     } catch (error) {
       console.error('Failed to update likes', error);
     }
   };
 
-  const addBlogToReadingList = async (blogId) => {
+  const addBlogToReadingList = async (blogId, blogName) => {
     if (!userId) {
       setNotification('Please log in first to add blog to list');
       setTimeout(() => setNotification(null), 5000);
@@ -60,7 +62,7 @@ const BlogPage = () => {
           Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
       });
-      setNotification('BlogId: ' + blogId + ' added to reading list');
+      setNotification(`Blog "${blogName}" added to reading list`);
       setTimeout(() => setNotification(null), 5000); 
 
     } catch (error) {
@@ -92,7 +94,7 @@ const BlogPage = () => {
     <div className='background-image'>
       <div className='content'>
         <h2>Blogs</h2>
-        {notification && <div className="notification">{notification}</div>}
+        {notification && <article className="notification-info">{notification}</article>}
         <div className='blogcard-content'>
           {blogs.map((blog) => (
               <div key={blog.id} className='blogcard'>
@@ -105,12 +107,12 @@ const BlogPage = () => {
               </section>
               <section className='blogcardcontent'>
                 <p className='blog-card-text'>{blog.url}</p>
-                <p className='blog-card-text'>Writer: {blog.username}</p>
+                <p className='blog-card-text'>{blog.username}</p>
               </section>
               <section className='blogcardactions'>
-                <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true)}>Like</button>
-                <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false)}>Dislike</button>
-                <button onClick={() => addBlogToReadingList(blog.id)} className='l-button'>Add to list</button>
+                <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true, blog.title)}>Like</button>
+                <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false, blog.title)}>Dislike</button>
+                <button onClick={() => addBlogToReadingList(blog.id, blog.title)} className='l-button'>Add to list</button>
               </section>
               
               {userId === blog.userid && (

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import '../css/tyylit.css'
+import '../css/notifications.css'
 
 const MainPage = () => {
   useEffect(() => {
