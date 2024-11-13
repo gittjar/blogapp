@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../css/notifications.css';
+
+const DeleteConfirmation = ({ blogName, onConfirm, onCancel }) => (
+  <article className="delete-confirmation">
+    <p>Are you sure you want to delete this blog "{blogName}"?</p>
+    <button className='yes-button' onClick={onConfirm}>Yes</button>
+    <button className='cancel-button' onClick={onCancel}>Cancel</button>
+  </article>
+);
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
   const [notification, setNotification] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState(null);
   const userId = Number(localStorage.getItem('userId'));
   const navigate = useNavigate();
 
@@ -73,21 +84,29 @@ const BlogPage = () => {
     }
   };
 
-  const deleteBlog = async (id) => {
+  const confirmDeleteBlog = async () => {
     try {
-      await axios.delete(`https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`, {
+      await axios.delete(`https://blogapp-backend-e23a.onrender.com/api/blogs/${blogToDelete.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
       });
-      setBlogs(blogs.filter(blog => blog.id !== id));
-      setNotification('Blog is now deleted!');
+      setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id));
+      setNotification(`Blog "${blogToDelete.title}" is now deleted!`);
       setTimeout(() => setNotification(null), 5000);
     } catch (error) {
       setNotification('Failed to delete blog');
       console.error('Failed to delete blog', error);
       setTimeout(() => setNotification(null), 5000);
+    } finally {
+      setShowDeleteConfirmation(false);
+      setBlogToDelete(null);
     }
+  };
+
+  const handleDeleteClick = (blog) => {
+    setBlogToDelete(blog);
+    setShowDeleteConfirmation(true);
   };
 
   return (
@@ -95,12 +114,18 @@ const BlogPage = () => {
       <div className='content'>
         <h2>Blogs</h2>
         {notification && <article className="notification-info">{notification}</article>}
+        {showDeleteConfirmation && (
+          <DeleteConfirmation
+            blogName={blogToDelete.title}
+            onConfirm={confirmDeleteBlog}
+            onCancel={() => setShowDeleteConfirmation(false)}
+          />
+        )}
         <div className='blogcard-content'>
           {blogs.map((blog) => (
               <div key={blog.id} className='blogcard'>
               <section className='blogcardheader'>
                 <article className='header-left'>
-            
                   <p className='blog-card-text'>Likes {blog.likes}</p>
                 </article>
                 <h3>{blog.title}</h3>
@@ -116,7 +141,7 @@ const BlogPage = () => {
               </section>
               
               {userId === blog.userid && (
-                    <button onClick={() => deleteBlog(blog.id)} className='delete-link-button'>Delete</button>
+                    <button onClick={() => handleDeleteClick(blog)} className='delete-link-button'>Delete</button>
                   )}
                   
             </div>

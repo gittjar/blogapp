@@ -12,6 +12,47 @@
     z-index: 1000;
     animation: slideDown 0.5s ease-out, fadeOut 0.5s ease-out 4.5s forwards;
   }
+
+  .delete-confirmation {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .delete-confirmation p {
+    margin-bottom: 20px;
+  }
+  
+  .yes-button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+    .yes-button:hover {
+        background-color: #0056b3;
+    }
+
+.cancel-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #d00404;
+        color: #fff;
+        cursor: pointer;
+      }
+        .cancel-button:hover {
+            background-color: #b30000;
+        }
   
   @keyframes slideDown {
     from {
