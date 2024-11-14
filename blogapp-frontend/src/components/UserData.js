@@ -96,7 +96,7 @@ const UserData = () => {
     <div className='content'>
       <h3>My data</h3>
       <div className="card">
-  {notification && <div className="notification">{notification}</div>}
+  {notification && <article className="notification-info">{notification}</article>}
   <table className="user-data-table">
     <tbody>
       <tr>

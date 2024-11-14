@@ -204,6 +204,13 @@ flex-direction: column;
     margin-left: 0.4rem;
     font-size: 0.9rem;
   }
+
+  .blog-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
   
   .delete-link-button, .like-button-green, .like-button-red, .l-button {
     padding: 5px 10px;

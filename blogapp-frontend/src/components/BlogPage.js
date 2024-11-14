@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/notifications.css';
+import '../css/spinner.css';
+import Spinner from './Spinner'; 
 
 const DeleteConfirmation = ({ blogName, onConfirm, onCancel }) => (
   <article className="delete-confirmation">
@@ -16,6 +18,7 @@ const BlogPage = () => {
   const [notification, setNotification] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState(null);
+  const [loading, setLoading] = useState(true); 
   const userId = Number(localStorage.getItem('userId'));
   const navigate = useNavigate();
 
@@ -30,6 +33,8 @@ const BlogPage = () => {
         setBlogs(response.data);
       } catch (error) {
         console.error('Failed to fetch blogs', error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
@@ -121,32 +126,36 @@ const BlogPage = () => {
             onCancel={() => setShowDeleteConfirmation(false)}
           />
         )}
-        <div className='blogcard-content'>
-          {blogs.map((blog) => (
+        {loading ? (
+          <Spinner /> // Use the Spinner component
+        ) : (
+          <div className='blogcard-content'>
+            {blogs.map((blog) => (
               <div key={blog.id} className='blogcard'>
-              <section className='blogcardheader'>
-                <article className='header-left'>
-                  <p className='blog-card-text'>Likes {blog.likes}</p>
-                </article>
-                <h3>{blog.title}</h3>
-              </section>
-              <section className='blogcardcontent'>
-                <p className='blog-card-text'>{blog.url}</p>
-                <p className='blog-card-text'>{blog.username}</p>
-              </section>
-              <section className='blogcardactions'>
-                <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true, blog.title)}>Like</button>
-                <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false, blog.title)}>Dislike</button>
-                <button onClick={() => addBlogToReadingList(blog.id, blog.title)} className='l-button'>Add to list</button>
-              </section>
-              
-              {userId === blog.userid && (
-                    <button onClick={() => handleDeleteClick(blog)} className='delete-link-button'>Delete</button>
-                  )}
-                  
-            </div>
-          ))}
-        </div>
+                <section className='blogcardheader'>
+                  <article className='header-left'>
+                    <p className='blog-card-text'>Likes {blog.likes}</p>
+                  </article>
+                  <h3>{blog.title}</h3>
+                </section>
+                <section className='blogcardcontent'>
+                  <p className='blog-card-text'>{blog.url}</p>
+                  <p className='blog-card-text'>{blog.username}</p>
+                </section>
+                <section className='blogcardactions'>
+                  <button className='like-button-green' onClick={() => handleLikeChange(blog.id, blog.likes, true, blog.title)}>Like</button>
+                  <button className='like-button-red' onClick={() => handleLikeChange(blog.id, blog.likes, false, blog.title)}>Dislike</button>
+                  <button onClick={() => addBlogToReadingList(blog.id, blog.title)} className='l-button'>Add to list</button>
+                </section>
+                <section className='blog-card-footer'>
+                {userId === blog.userid && (
+                  <button onClick={() => handleDeleteClick(blog)} className='delete-link-button'>Delete</button>
+                )}
+                </section>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
