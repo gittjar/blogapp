@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../css/notifications.css';
-import '../css/spinner.css';
 import Spinner from './Spinner'; 
 
 const DeleteConfirmation = ({ blogName, onConfirm, onCancel }) => (

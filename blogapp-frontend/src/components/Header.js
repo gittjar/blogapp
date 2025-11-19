@@ -1,7 +1,19 @@
-// Header.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { Layout, Menu, Button, Space, Typography } from 'antd';
+import { 
+  HomeOutlined, 
+  ReadOutlined, 
+  UserAddOutlined, 
+  UserOutlined, 
+  EditOutlined, 
+  LoginOutlined,
+  LogoutOutlined 
+} from '@ant-design/icons';
+
+const { Header: AntHeader } = Layout;
+const { Text } = Typography;
 
 const Header = () => {
   const [userData, setUserData] = useState(null);
@@ -34,29 +46,74 @@ const Header = () => {
     navigate('/');
   };
 
-  return (
+  const menuItems = [
+    {
+      key: 'home',
+      icon: <HomeOutlined />,
+      label: <Link to="/">Home</Link>,
+    },
+    {
+      key: 'blogs',
+      icon: <ReadOutlined />,
+      label: <Link to="/blogs">Blogs</Link>,
+    },
+    {
+      key: 'create-user',
+      icon: <UserAddOutlined />,
+      label: <Link to="/create-user">Create User</Link>,
+    },
+    ...(userData
+      ? [
+          {
+            key: 'user-data',
+            icon: <UserOutlined />,
+            label: <Link to="/user-data">User Data</Link>,
+          },
+          {
+            key: 'create-blog',
+            icon: <EditOutlined />,
+            label: <Link to="/create-blog">Create Blog</Link>,
+          },
+        ]
+      : [
+          {
+            key: 'login',
+            icon: <LoginOutlined />,
+            label: <Link to="/login">Login</Link>,
+          },
+        ]),
+  ];
 
-    <nav style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div>
-        <Link className='header-link' to="/">Home</Link>
-        <Link className='header-link' to="/blogs">Blogs</Link>
-        <Link className='header-link' to="/create-user">Create user</Link>
-        {userData ? (
-          <>
-            <Link className='header-link' to="/user-data">User data</Link>
-            <Link className='header-link' to="/create-blog">Create blog</Link>
-          </>
-        ) : (
-          <Link className='header-link' to="/login">Login</Link>
-        )}
-      </div>
+  return (
+    <AntHeader style={{ 
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center',
+      background: '#001529',
+      padding: '0 50px'
+    }}>
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        items={menuItems}
+        style={{ flex: 1, minWidth: 0 }}
+      />
       {userData && (
-        <div>
-          <span>Hello, {userData.username}! You're logged in!</span>
-          <button onClick={handleLogout} className='logout-button'>Logout</button>
-        </div>
+        <Space>
+          <Text style={{ color: 'white' }}>
+            Hello, {userData.username}!
+          </Text>
+          <Button 
+            type="primary" 
+            danger
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </Space>
       )}
-    </nav>
+    </AntHeader>
   );
 };
 

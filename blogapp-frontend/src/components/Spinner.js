@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../css/spinner.css';
 
 const Spinner = () => {
   const [message, setMessage] = useState('Loading data from database...');
