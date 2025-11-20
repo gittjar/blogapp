@@ -1,0 +1,52 @@
+/* Mobile first - Hide desktop, show mobile by default */
+.desktop-menu {
+  display: none !important;
+}
+
+.desktop-user {
+  display: none !important;
+}
+
+.mobile-menu-button {
+  display: block !important;
+}
+
+/* Desktop styles - Show desktop menu, hide mobile hamburger */
+@media (min-width: 768px) {
+  .desktop-menu {
+    display: flex !important;
+  }
+  
+  .desktop-user {
+    display: block !important;
+  }
+  
+  .mobile-menu-button {
+    display: none !important;
+  }
+  
+  .ant-layout-header {
+    padding: 0 50px !important;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .ant-layout-header {
+    padding: 0 15px !important;
+  }
+  
+  .desktop-menu {
+    display: none !important;
+  }
+  
+  .desktop-user {
+    display: none !important;
+  }
+  
+  .mobile-menu-button {
+    display: block !important;
+  }
+}
+
+

@@ -1,0 +1,22 @@
+/* Mobile Responsive Fixes */
+
+/* Ensure cards stack on mobile */
+@media (max-width: 767px) {
+  .ant-col-xs-24 {
+    display: block !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .ant-row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Ensure proper spacing */
+@media (max-width: 576px) {
+  .ant-layout-content {
+    padding: 20px 15px !important;
+  }
+}
