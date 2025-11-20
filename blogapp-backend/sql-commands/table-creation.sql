@@ -24,3 +24,13 @@ CREATE TABLE reading_list (
   is_read BIT DEFAULT 0
 );
 
+-- Add columns to existing blogs table
+ALTER TABLE blogs ADD description NVARCHAR(500);
+ALTER TABLE blogs ADD content NVARCHAR(MAX);
+ALTER TABLE blogs ADD image_url NVARCHAR(500);
+ALTER TABLE blogs ADD category NVARCHAR(100);
+ALTER TABLE blogs ADD views INT DEFAULT 0;
+ALTER TABLE blogs ADD is_published BIT DEFAULT 1;
+ALTER TABLE blogs ADD created_at DATETIME2 DEFAULT SYSDATETIME();
+ALTER TABLE blogs ADD updated_at DATETIME2 DEFAULT SYSDATETIME();
+
