@@ -1,39 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Layout, 
+  Card, 
+  Form, 
+  Input, 
+  Button, 
+  Typography, 
+  Space,
+  Select,
+  message
+} from 'antd';
+import { 
+  EditOutlined, 
+  LinkOutlined,
+  FileTextOutlined,
+  TagsOutlined,
+  PictureOutlined,
+  UserOutlined
+} from '@ant-design/icons';
+import matrixImage from '../kuvat/matrix-5.jpeg';
 
-class CreateBlog extends React.Component {
-  state = {
-    author: '',
-    title: '',
-    likes: 0,
-    url: '',
-    notification: null,
-  };
+const { Content } = Layout;
+const { Title, Text } = Typography;
+const { TextArea } = Input;
+const { Option } = Select;
 
-  handleAuthorChange = (event) => {
-    this.setState({ author: event.target.value });
-  };
+const CreateBlog = () => {
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
-  handleTitleChange = (event) => {
-    this.setState({ title: event.target.value });
-  };
-
-  handleLikesChange = (event) => {
-    this.setState({ likes: event.target.value });
-  };
-
-  handleUrlChange = (event) => {
-    this.setState({ url: event.target.value });
-  };
-
-  handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (values) => {
+    setLoading(true);
 
     const blog = {
-      author: this.state.author,
-      title: this.state.title,
-      likes: this.state.likes,
-      url: this.state.url,
+      author: values.author,
+      title: values.title,
+      description: values.description,
+      content: values.content,
+      url: values.url,
+      image_url: values.image_url,
+      category: values.category,
+      likes: 0,
     };
 
     const userToken = localStorage.getItem('userToken');
@@ -46,71 +57,209 @@ class CreateBlog extends React.Component {
       });
 
       if (response.status === 201) {
-        this.setState({
-          author: '',
-          title: '',
-          likes: 0,
-          url: '',
-          notification: 'Blog added successfully to database!',
-        });
-
+        message.success('🎉 Blog created successfully!');
+        form.resetFields();
         setTimeout(() => {
-          this.setState({ notification: null });
-        }, 5000);
+          navigate('/blogs');
+        }, 1500);
       }
     } catch (error) {
       console.error('Failed to add blog', error);
-      this.setState({ notification: 'Failed to add blog' });
-
-      setTimeout(() => {
-        this.setState({ notification: null });
-      }, 5000);
+      message.error('Failed to create blog. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  render() {
-    const userId = localStorage.getItem('userId');
+  if (!userId) {
+    return (
+      <Layout style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Card>
+          <Text style={{ fontSize: '1.2rem' }}>
+            Please <a href="/login">log in</a> to create a blog.
+          </Text>
+        </Card>
+      </Layout>
+    );
+  }
 
-    if (!userId) {
-      return <div style={{ 
+  return (
+    <Layout style={{ 
+      minHeight: '100vh', 
+      background: `linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%), url(${matrixImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
+      <Content style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center',
-        fontSize: '1.4rem',
-      }}>Please log in to create a blog.</div>;
-    }
+        padding: '40px 20px'
+      }}>
+        <Card
+          style={{
+            maxWidth: '800px',
+            width: '100%',
+            borderRadius: '16px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            background: 'rgba(255, 255, 255, 0.98)'
+          }}
+          variant="borderless"
+        >
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            {/* Header */}
+            <div style={{ textAlign: 'center' }}>
+              <EditOutlined style={{ fontSize: '48px', color: '#667eea', marginBottom: '16px' }} />
+              <Title level={2} style={{ margin: '0 0 8px 0', fontSize: 'clamp(1.5em, 4vw, 2em)' }}>
+                Create New Blog Post
+              </Title>
+              <Text type="secondary" style={{ fontSize: 'clamp(14px, 2.5vw, 15px)' }}>
+                Share your thoughts with the world
+              </Text>
+            </div>
 
-    return (
-      <form onSubmit={this.handleSubmit} className='creation-form'>
-        <div className='content'>
-        <h2>Create a new blog</h2>
-        {this.state.notification && <div className="notification">{this.state.notification}</div>}
-        <div className='create-blog'>
-        <label>
-          Author:<br></br>
-          <input type="text" value={this.state.author} onChange={this.handleAuthorChange} />
-        </label>
-        <br></br>
-        <label>
-          Title:<br></br>
-          <input type="text" value={this.state.title} onChange={this.handleTitleChange} />
-        </label>
-        <br></br>
-        <label>
-          Likes:<br></br>
-          <input type="number" value={this.state.likes} onChange={this.handleLikesChange} />
-        </label>
-        <br></br>
-        <label>
-          URL:<br></br>
-          <input type="text" value={this.state.url} onChange={this.handleUrlChange} />
-        </label>
-        <br></br>
-        <button type="submit" className='l-button'>Create blog</button>
-        </div></div>
-      </form>
-    );
-  }
-}
+            {/* Form */}
+            <Form
+              form={form}
+              name="createBlog"
+              onFinish={handleSubmit}
+              layout="vertical"
+              size="large"
+              autoComplete="off"
+            >
+              <Form.Item
+                label="Author Name"
+                name="author"
+                rules={[
+                  { required: true, message: 'Please enter author name!' },
+                ]}
+              >
+                <Input 
+                  prefix={<UserOutlined style={{ color: '#bfbfbf' }} />}
+                  placeholder="Your name or pen name"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Title"
+                name="title"
+                rules={[
+                  { required: true, message: 'Please enter blog title!' },
+                  { min: 5, message: 'Title must be at least 5 characters' },
+                  { max: 255, message: 'Title is too long' }
+                ]}
+              >
+                <Input 
+                  prefix={<FileTextOutlined style={{ color: '#bfbfbf' }} />}
+                  placeholder="Enter an engaging title"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Short Description"
+                name="description"
+                rules={[
+                  { max: 500, message: 'Description is too long' }
+                ]}
+              >
+                <TextArea
+                  rows={2}
+                  placeholder="A brief summary of your blog post (optional)"
+                  showCount
+                  maxLength={500}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Content"
+                name="content"
+                rules={[
+                  { min: 10, message: 'Content should be at least 10 characters' }
+                ]}
+              >
+                <TextArea
+                  rows={8}
+                  placeholder="Write your blog content here... (optional)"
+                  showCount
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="URL"
+                name="url"
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL!' }
+                ]}
+              >
+                <Input 
+                  prefix={<LinkOutlined style={{ color: '#bfbfbf' }} />}
+                  placeholder="https://example.com/your-article (optional)"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Image URL"
+                name="image_url"
+                rules={[
+                  { type: 'url', message: 'Please enter a valid image URL!' }
+                ]}
+              >
+                <Input 
+                  prefix={<PictureOutlined style={{ color: '#bfbfbf' }} />}
+                  placeholder="https://example.com/image.jpg (optional)"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Category"
+                name="category"
+              >
+                <Select
+                  placeholder="Select a category (optional)"
+                  suffixIcon={<TagsOutlined />}
+                  allowClear
+                >
+                  <Option value="Technology">Technology</Option>
+                  <Option value="Programming">Programming</Option>
+                  <Option value="Design">Design</Option>
+                  <Option value="Business">Business</Option>
+                  <Option value="Lifestyle">Lifestyle</Option>
+                  <Option value="Education">Education</Option>
+                  <Option value="Science">Science</Option>
+                  <Option value="Health">Health</Option>
+                  <Option value="Travel">Travel</Option>
+                  <Option value="Food">Food</Option>
+                  <Option value="Other">Other</Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item style={{ marginBottom: 0 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  block
+                  icon={<EditOutlined />}
+                  style={{
+                    height: '48px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    border: 'none',
+                    borderRadius: '8px',
+                  }}
+                >
+                  {loading ? 'Creating Blog...' : 'Publish Blog'}
+                </Button>
+              </Form.Item>
+            </Form>
+          </Space>
+        </Card>
+      </Content>
+    </Layout>
+  );
+};
+
 
 export default CreateBlog;

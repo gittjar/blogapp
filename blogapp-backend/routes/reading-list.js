@@ -41,7 +41,15 @@ router.post('/', getUserFromToken, async (req, res) => {
       let pool = await sql.connect(config);
       let result = await pool.request()
         .input('userId', sql.Int, userId)
-        .query('SELECT blogs.* FROM reading_list JOIN blogs ON reading_list.blog_id = blogs.id WHERE reading_list.user_id = @userId');
+        .query(`SELECT 
+          blogs.*,
+          reading_list.is_read,
+          FORMAT(blogs.created_at, 'yyyy-MM-dd HH:mm:ss') as formatted_created_at,
+          FORMAT(blogs.updated_at, 'yyyy-MM-dd HH:mm:ss') as formatted_updated_at
+        FROM reading_list 
+        JOIN blogs ON reading_list.blog_id = blogs.id 
+        WHERE reading_list.user_id = @userId
+        ORDER BY reading_list.id DESC`);
       res.json(result.recordset);
     } catch (err) {
       console.error(err);
