@@ -25,7 +25,8 @@ import {
   LinkOutlined,
   UserOutlined,
   HeartFilled,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  ReadOutlined
 } from '@ant-design/icons';
 import Spinner from './Spinner';
 import matrixImage from '../kuvat/matrix-4.jpeg';
@@ -280,6 +281,22 @@ const BlogPage = () => {
                           size="small" 
                           style={{ width: '100%' }}
                         >
+                          <Button 
+                            type="primary"
+                            block
+                            icon={<ReadOutlined />}
+                            onClick={() => navigate(`/blogs/${blog.id}`)}
+                            style={{ 
+                              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                              borderColor: 'transparent',
+                              fontWeight: '600',
+                              fontSize: 'clamp(13px, 2.5vw, 14px)'
+                            }}
+                            size="middle"
+                          >
+                            Read Full Blog
+                          </Button>
+                          
                           <Space wrap style={{ width: '100%', justifyContent: 'space-between' }}>
                             <Space size="small">
                               <Tooltip title="Like this blog">

@@ -46,6 +46,34 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET api/blogs/:id (get a single blog)
+router.get('/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  
+  try {
+    let pool = await sql.connect(config);
+    let result = await pool.request()
+      .input('id', sql.Int, id)
+      .query(`SELECT 
+        blogs.*, 
+        users.username,
+        FORMAT(blogs.created_at, 'yyyy-MM-dd HH:mm:ss') as formatted_created_at,
+        FORMAT(blogs.updated_at, 'yyyy-MM-dd HH:mm:ss') as formatted_updated_at
+      FROM blogs 
+      JOIN users ON blogs.userid = users.id
+      WHERE blogs.id = @id`);
+    
+    if (result.recordset.length === 0) {
+      return res.status(404).send('Blog not found');
+    }
+    
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error executing query');
+  }
+});
+
  // POST api/blogs (add a new blog)
 router.post('/', getUserFromToken, async (req, res) => {
     const { author, title, likes, url, description, content, image_url, category } = req.body;
