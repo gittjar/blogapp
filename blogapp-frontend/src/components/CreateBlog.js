@@ -65,7 +65,10 @@ const CreateBlog = () => {
       }
     } catch (error) {
       console.error('Failed to add blog', error);
-      message.error('Failed to create blog. Please try again.');
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      const errorMsg = error.response?.data || 'Failed to create blog. Please try again.';
+      message.error(errorMsg);
     } finally {
       setLoading(false);
     }

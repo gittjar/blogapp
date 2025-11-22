@@ -51,26 +51,52 @@ router.post('/', getUserFromToken, async (req, res) => {
     const { author, title, likes, url, description, content, image_url, category } = req.body;
     const userId = req.user.id; // Get user id from request
   
+    console.log('Attempting to create blog with data:', { author, title, likes, url, description, content, image_url, category, userId });
+  
     try {
       let pool = await sql.connect(config);
-      let result = await pool.request()
+      
+      // Build dynamic query based on which fields exist in database
+      let columns = ['author', 'title', 'likes', 'url', 'userid'];
+      let values = ['@author', '@title', '@likes', '@url', '@userId'];
+      let request = pool.request()
         .input('author', sql.NVarChar, author)
         .input('title', sql.NVarChar, title)
         .input('likes', sql.Int, likes || 0)
-        .input('url', sql.NVarChar, url)
-        .input('description', sql.NVarChar, description || null)
-        .input('content', sql.NVarChar, content || null)
-        .input('image_url', sql.NVarChar, image_url || null)
-        .input('category', sql.NVarChar, category || null)
-        .input('userId', sql.Int, userId)
-        .query(`INSERT INTO blogs 
-          (author, title, likes, url, description, content, image_url, category, userid, created_at, updated_at) 
-          VALUES 
-          (@author, @title, @likes, @url, @description, @content, @image_url, @category, @userId, SYSDATETIME(), SYSDATETIME())`);
+        .input('url', sql.NVarChar, url || '')
+        .input('userId', sql.Int, userId);
+      
+      // Add optional new columns only if they're provided
+      if (description !== undefined) {
+        columns.push('description');
+        values.push('@description');
+        request.input('description', sql.NVarChar, description);
+      }
+      if (content !== undefined) {
+        columns.push('content');
+        values.push('@content');
+        request.input('content', sql.NVarChar, content);
+      }
+      if (image_url !== undefined) {
+        columns.push('image_url');
+        values.push('@image_url');
+        request.input('image_url', sql.NVarChar, image_url);
+      }
+      if (category !== undefined) {
+        columns.push('category');
+        values.push('@category');
+        request.input('category', sql.NVarChar, category);
+      }
+      
+      const query = `INSERT INTO blogs (${columns.join(', ')}) VALUES (${values.join(', ')})`;
+      console.log('Executing query:', query);
+      
+      let result = await request.query(query);
       res.status(201).send('Blog added');
     } catch (err) {
-      console.error(err);
-      res.status(500).send('Error executing query');
+      console.error('Database error:', err);
+      console.error('Error message:', err.message);
+      res.status(500).send(`Error executing query: ${err.message}`);
     }
   });
   
