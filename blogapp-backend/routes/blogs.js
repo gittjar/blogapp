@@ -52,6 +52,13 @@ router.get('/:id', async (req, res) => {
   
   try {
     let pool = await sql.connect(config);
+    
+    // Increment view count
+    await pool.request()
+      .input('id', sql.Int, id)
+      .query('UPDATE blogs SET views = ISNULL(views, 0) + 1 WHERE id = @id');
+    
+    // Get the blog with updated view count
     let result = await pool.request()
       .input('id', sql.Int, id)
       .query(`SELECT 

@@ -257,7 +257,7 @@ const BlogPage = () => {
                       color: 'white'
                     }}>
                       <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                           <Tag 
                             icon={<HeartFilled />} 
                             color="rgba(255, 255, 255, 0.2)"
@@ -269,6 +269,18 @@ const BlogPage = () => {
                           >
                             {blog.likes} Likes
                           </Tag>
+                          {blog.views !== null && blog.views !== undefined && (
+                            <Tag 
+                              color="rgba(255, 255, 255, 0.2)"
+                              style={{ 
+                                border: '1px solid rgba(255, 255, 255, 0.3)',
+                                color: 'white',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              👁️ {blog.views} Views
+                            </Tag>
+                          )}
                         </div>
                         <Title 
                           level={4} 
@@ -281,6 +293,11 @@ const BlogPage = () => {
                         >
                           {blog.title}
                         </Title>
+                        {blog.category && (
+                          <Tag color="gold" style={{ fontSize: '12px' }}>
+                            📁 {blog.category}
+                          </Tag>
+                        )}
                       </Space>
                     </div>
 
