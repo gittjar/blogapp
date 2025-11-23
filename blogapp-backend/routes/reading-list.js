@@ -22,6 +22,17 @@ router.post('/', getUserFromToken, async (req, res) => {
   
     try {
       let pool = await sql.connect(config);
+      
+      // Check if blog is already in reading list
+      let existing = await pool.request()
+        .input('userId', sql.Int, userId)
+        .input('blogId', sql.Int, blogId)
+        .query('SELECT id FROM reading_list WHERE user_id = @userId AND blog_id = @blogId');
+      
+      if (existing.recordset.length > 0) {
+        return res.status(409).json({ message: 'Kyseinen blogi on jo lukulistallasi' });
+      }
+      
       await pool.request()
         .input('userId', sql.Int, userId)
         .input('blogId', sql.Int, blogId)
@@ -123,6 +134,63 @@ router.delete('/:id', getUserFromToken, async (req, res) => {
       .query('DELETE FROM reading_list WHERE id = @readingListId');
 
     res.status(200).send('Blog removed from reading list successfully!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error executing query');
+  }
+});
+
+// DELETE /api/reading-list/blog/:blogId (remove a blog from reading list by blog ID)
+router.delete('/blog/:blogId', getUserFromToken, async (req, res) => {
+  const blogId = parseInt(req.params.blogId);
+  const userId = req.user.id;
+
+  try {
+    let pool = await sql.connect(config);
+    
+    // Delete the reading list item
+    let result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('blogId', sql.Int, blogId)
+      .query('DELETE FROM reading_list WHERE user_id = @userId AND blog_id = @blogId');
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).send('Blog not found in reading list');
+    }
+
+    res.status(200).send('Blog removed from reading list successfully!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error executing query');
+  }
+});
+
+// GET /api/reading-list/check (check if blogs are in user's reading list)
+router.get('/check', getUserFromToken, async (req, res) => {
+  const userId = req.user.id;
+  const blogIds = req.query.blogIds; // comma-separated string of blog IDs
+
+  try {
+    let pool = await sql.connect(config);
+    
+    if (!blogIds) {
+      return res.json([]);
+    }
+    
+    const blogIdArray = blogIds.split(',').map(id => parseInt(id));
+    const placeholders = blogIdArray.map((_, index) => `@blogId${index}`).join(',');
+    
+    let request = pool.request().input('userId', sql.Int, userId);
+    blogIdArray.forEach((id, index) => {
+      request.input(`blogId${index}`, sql.Int, id);
+    });
+    
+    let result = await request.query(
+      `SELECT blog_id, id as reading_list_id FROM reading_list 
+       WHERE user_id = @userId AND blog_id IN (${placeholders})`
+    );
+    
+    res.json(result.recordset);
   } catch (err) {
     console.error(err);
     res.status(500).send('Error executing query');

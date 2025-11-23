@@ -37,7 +37,8 @@ const { confirm } = Modal;
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const [readingListBlogs, setReadingListBlogs] = useState(new Map()); // Map of blogId -> readingListId
   const userId = Number(localStorage.getItem('userId'));
   const navigate = useNavigate();
 
@@ -50,6 +51,28 @@ const BlogPage = () => {
           },
         });
         setBlogs(response.data);
+        
+        // Check which blogs are in reading list
+        if (userId && response.data.length > 0) {
+          const blogIds = response.data.map(blog => blog.id).join(',');
+          try {
+            const readingListResponse = await axios.get(
+              `https://blogapp-backend-e23a.onrender.com/api/reading-list/check?blogIds=${blogIds}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+                },
+              }
+            );
+            const readingMap = new Map();
+            readingListResponse.data.forEach(item => {
+              readingMap.set(item.blog_id, item.reading_list_id);
+            });
+            setReadingListBlogs(readingMap);
+          } catch (error) {
+            console.error('Failed to check reading list', error);
+          }
+        }
       } catch (error) {
         console.error('Failed to fetch blogs', error);
         message.error('Failed to load blogs');
@@ -59,7 +82,7 @@ const BlogPage = () => {
     };
 
     fetchBlogs();
-  }, []);
+  }, [userId]);
 
   const handleLikeChange = async (id, likes, increment, blogName) => {
     try {
@@ -98,10 +121,38 @@ const BlogPage = () => {
           Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
       });
+      
+      // Update local state to show it's in reading list
+      setReadingListBlogs(new Map(readingListBlogs.set(blogId, true)));
+      
       message.success(`📚 "${blogName}" added to reading list`);
     } catch (error) {
       console.error('Failed to add blog to reading list', error);
-      message.error('Failed to add blog to reading list');
+      if (error.response?.status === 409) {
+        message.warning(error.response.data.message || 'Kyseinen blogi on jo lukulistallasi');
+      } else {
+        message.error('Failed to add blog to reading list');
+      }
+    }
+  };
+
+  const removeBlogFromReadingList = async (blogId, blogName) => {
+    try {
+      await axios.delete(`https://blogapp-backend-e23a.onrender.com/api/reading-list/blog/${blogId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+      });
+      
+      // Update local state to remove from reading list
+      const newMap = new Map(readingListBlogs);
+      newMap.delete(blogId);
+      setReadingListBlogs(newMap);
+      
+      message.success(`🗑️ "${blogName}" removed from reading list`);
+    } catch (error) {
+      console.error('Failed to remove blog from reading list', error);
+      message.error('Failed to remove blog from reading list');
     }
   };
 
@@ -328,19 +379,38 @@ const BlogPage = () => {
                             </Space>
                           </Space>
 
-                          <Button 
-                            block
-                            icon={<BookOutlined />}
-                            onClick={() => addBlogToReadingList(blog.id, blog.title)}
-                            style={{ 
-                              borderColor: '#667eea',
-                              color: '#667eea',
-                              fontSize: 'clamp(12px, 2vw, 14px)'
-                            }}
-                            size="small"
-                          >
-                            Add to Reading List
-                          </Button>
+                          {/* Reading List Button - Changes based on status */}
+                          {readingListBlogs.has(blog.id) ? (
+                            <Button 
+                              block
+                              icon={<BookOutlined />}
+                              onClick={() => removeBlogFromReadingList(blog.id, blog.title)}
+                              style={{ 
+                                background: '#52c41a',
+                                borderColor: '#52c41a',
+                                color: 'white',
+                                fontSize: 'clamp(12px, 2vw, 14px)',
+                                fontWeight: '600'
+                              }}
+                              size="small"
+                            >
+                              ✓ In Reading List - Click to Remove
+                            </Button>
+                          ) : (
+                            <Button 
+                              block
+                              icon={<BookOutlined />}
+                              onClick={() => addBlogToReadingList(blog.id, blog.title)}
+                              style={{ 
+                                borderColor: '#667eea',
+                                color: '#667eea',
+                                fontSize: 'clamp(12px, 2vw, 14px)'
+                              }}
+                              size="small"
+                            >
+                              Add to Reading List
+                            </Button>
+                          )}
 
                           {/* Delete Button - Only for owner */}
                           {userId === blog.userid && (

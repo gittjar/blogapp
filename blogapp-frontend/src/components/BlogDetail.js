@@ -21,7 +21,9 @@ import {
   CalendarOutlined,
   UserOutlined,
   LinkOutlined,
-  TagOutlined
+  TagOutlined,
+  BookOutlined,
+  BookFilled
 } from '@ant-design/icons';
 import matrixImage from '../kuvat/matrix-1.jpeg';
 
@@ -34,9 +36,12 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
+  const [inReadingList, setInReadingList] = useState(false);
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     fetchBlog();
+    checkReadingListStatus();
   }, [id]);
 
   const fetchBlog = async () => {
@@ -48,6 +53,24 @@ const BlogDetail = () => {
       console.error('Failed to fetch blog', error);
       message.error('Failed to load blog');
       setLoading(false);
+    }
+  };
+
+  const checkReadingListStatus = async () => {
+    if (!userId) return;
+    
+    try {
+      const response = await axios.get(
+        `https://blogapp-backend-e23a.onrender.com/api/reading-list/check?blogIds=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        }
+      );
+      setInReadingList(response.data.length > 0);
+    } catch (error) {
+      console.error('Failed to check reading list status', error);
     }
   };
 
@@ -75,6 +98,53 @@ const BlogDetail = () => {
     } catch (error) {
       console.error('Failed to like blog', error);
       message.error('Failed to like blog');
+    }
+  };
+
+  const addToReadingList = async () => {
+    if (!userId) {
+      message.warning('Please login to add to reading list');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      await axios.post(
+        'https://blogapp-backend-e23a.onrender.com/api/reading-list',
+        { blogId: parseInt(id) },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        }
+      );
+      setInReadingList(true);
+      message.success('📚 Added to reading list!');
+    } catch (error) {
+      console.error('Failed to add to reading list', error);
+      if (error.response?.status === 409) {
+        message.warning(error.response.data.message || 'Kyseinen blogi on jo lukulistallasi');
+      } else {
+        message.error('Failed to add to reading list');
+      }
+    }
+  };
+
+  const removeFromReadingList = async () => {
+    try {
+      await axios.delete(
+        `https://blogapp-backend-e23a.onrender.com/api/reading-list/blog/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        }
+      );
+      setInReadingList(false);
+      message.success('🗑️ Removed from reading list!');
+    } catch (error) {
+      console.error('Failed to remove from reading list', error);
+      message.error('Failed to remove from reading list');
     }
   };
 
@@ -272,6 +342,18 @@ const BlogDetail = () => {
                   }}
                 >
                   {liked ? 'Liked' : 'Like this Blog'}
+                </Button>
+
+                <Button
+                  type={inReadingList ? 'default' : 'primary'}
+                  icon={inReadingList ? <BookFilled /> : <BookOutlined />}
+                  onClick={inReadingList ? removeFromReadingList : addToReadingList}
+                  size="large"
+                  style={{
+                    fontWeight: '600',
+                  }}
+                >
+                  {inReadingList ? 'In Reading List' : 'Add to Reading List'}
                 </Button>
 
                 <Button
