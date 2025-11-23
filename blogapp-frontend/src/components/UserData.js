@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { 
   Layout, 
   Card, 
@@ -20,7 +21,8 @@ import {
   HeartOutlined,
   UserOutlined,
   CalendarOutlined,
-  TagOutlined
+  TagOutlined,
+  ReadOutlined
 } from '@ant-design/icons';
 import matrixImage from '../kuvat/matrix-2.jpeg';
 
@@ -31,6 +33,7 @@ const UserData = () => {
   const [users, setUsers] = useState([]);
   const [userData, setUserData] = useState(null);
   const userId = Number(localStorage.getItem('userId'));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -119,7 +122,19 @@ const UserData = () => {
       key: 'title',
       render: (text, record) => (
         <Space direction="vertical" size="small" style={{ maxWidth: '300px' }}>
-          <Text strong style={{ fontSize: '16px' }}>{text}</Text>
+          <Button 
+            type="link" 
+            onClick={() => navigate(`/blogs/${record.id}`)}
+            style={{ 
+              padding: 0, 
+              height: 'auto',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              textAlign: 'left'
+            }}
+          >
+            {text}
+          </Button>
           {record.description && (
             <Text type="secondary" style={{ fontSize: '13px' }} ellipsis>
               {record.description.substring(0, 100)}...
@@ -211,17 +226,30 @@ const UserData = () => {
       key: 'action',
       align: 'center',
       render: (_, record) => (
-        <Popconfirm
-          title="Remove from reading list"
-          description="Are you sure you want to remove this blog?"
-          onConfirm={() => removeBlogFromReadingList(record.readingListId)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button type="primary" danger icon={<DeleteOutlined />}>
-            Remove
+        <Space direction="vertical" size="small">
+          <Button 
+            type="primary"
+            icon={<ReadOutlined />}
+            onClick={() => navigate(`/blogs/${record.id}`)}
+            style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              border: 'none',
+            }}
+          >
+            Continue Reading
           </Button>
-        </Popconfirm>
+          <Popconfirm
+            title="Remove from reading list"
+            description="Are you sure you want to remove this blog?"
+            onConfirm={() => removeBlogFromReadingList(record.readingListId)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger icon={<DeleteOutlined />} block>
+              Remove
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
