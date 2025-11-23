@@ -50,13 +50,17 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   
+  console.log(`📖 Blog ${id} requested - incrementing view count`);
+  
   try {
     let pool = await sql.connect(config);
     
     // Increment view count
-    await pool.request()
+    let updateResult = await pool.request()
       .input('id', sql.Int, id)
       .query('UPDATE blogs SET views = ISNULL(views, 0) + 1 WHERE id = @id');
+    
+    console.log(`✅ View count updated. Rows affected: ${updateResult.rowsAffected[0]}`);
     
     // Get the blog with updated view count
     let result = await pool.request()
@@ -74,9 +78,11 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send('Blog not found');
     }
     
+    console.log(`📊 Blog ${id} now has ${result.recordset[0].views} views`);
+    
     res.json(result.recordset[0]);
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching blog:', err);
     res.status(500).send('Error executing query');
   }
 });
