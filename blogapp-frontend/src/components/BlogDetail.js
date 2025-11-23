@@ -23,7 +23,8 @@ import {
   LinkOutlined,
   TagOutlined,
   BookOutlined,
-  BookFilled
+  BookFilled,
+  EditOutlined
 } from '@ant-design/icons';
 import matrixImage from '../kuvat/matrix-1.jpeg';
 
