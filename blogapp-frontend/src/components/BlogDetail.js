@@ -356,6 +356,23 @@ const BlogDetail = () => {
                   {inReadingList ? 'In Reading List' : 'Add to Reading List'}
                 </Button>
 
+                {/* Edit Button - Only for blog owner */}
+                {blog && userId && parseInt(userId) === blog.userid && (
+                  <Button
+                    type="default"
+                    icon={<EditOutlined />}
+                    onClick={() => navigate(`/blogs/${id}/edit`)}
+                    size="large"
+                    style={{
+                      fontWeight: '600',
+                      borderColor: '#faad14',
+                      color: '#faad14',
+                    }}
+                  >
+                    Edit Blog
+                  </Button>
+                )}
+
                 <Button
                   size="large"
                   onClick={() => navigate('/blogs')}
