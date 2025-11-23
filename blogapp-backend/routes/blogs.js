@@ -144,17 +144,21 @@ router.post('/', getUserFromToken, async (req, res) => {
   // PUT api/blogs/:id (modify a blog)
   router.put('/:id', getUserFromToken, async (req, res) => {
     const id = parseInt(req.params.id);
-    const { likes, title, description, content, url, image_url, category } = req.body;
+    const { likes, author, title, description, content, url, image_url, category } = req.body;
     const userId = req.user.id;
   
     try {
       let pool = await sql.connect(config);
       
       // Check if user owns the blog (for content updates) or just updating likes
-      if (title || description || content || url || image_url || category) {
+      if (author || title || description || content || url || image_url || category) {
         let ownerCheck = await pool.request()
           .input('id', sql.Int, id)
           .query('SELECT userid FROM blogs WHERE id = @id');
+        
+        if (ownerCheck.recordset.length === 0) {
+          return res.status(404).send('Blog not found');
+        }
         
         if (ownerCheck.recordset[0].userid !== userId) {
           return res.status(403).send('You are not authorized to modify this blog');
@@ -169,6 +173,10 @@ router.post('/', getUserFromToken, async (req, res) => {
         updateFields.push('likes = @likes');
         request.input('likes', sql.Int, likes);
       }
+      if (author) {
+        updateFields.push('author = @author');
+        request.input('author', sql.NVarChar, author);
+      }
       if (title) {
         updateFields.push('title = @title');
         request.input('title', sql.NVarChar, title);
@@ -181,7 +189,7 @@ router.post('/', getUserFromToken, async (req, res) => {
         updateFields.push('content = @content');
         request.input('content', sql.NVarChar, content);
       }
-      if (url) {
+      if (url !== undefined) {
         updateFields.push('url = @url');
         request.input('url', sql.NVarChar, url);
       }
