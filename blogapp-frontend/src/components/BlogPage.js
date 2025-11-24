@@ -230,222 +230,185 @@ const BlogPage = () => {
                 <Col xs={24} sm={24} md={12} lg={8} key={blog.id}>
                   <Card
                     hoverable
+                    cover={
+                      <div style={{ 
+                        height: '200px', 
+                        overflow: 'hidden',
+                        position: 'relative',
+                        background: blog.image_url 
+                          ? `url(${blog.image_url})` 
+                          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                      }}>
+                        {/* Overlay with stats */}
+                        <div style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          padding: '16px',
+                          background: 'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%)',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'flex-start',
+                          flexWrap: 'wrap',
+                          gap: '8px'
+                        }}>
+                          <Space size="small">
+                            <Tag icon={<HeartFilled />} color="rgba(255,255,255,0.9)" style={{ color: '#ff4d4f', fontWeight: 'bold', border: 'none' }}>
+                              {blog.likes}
+                            </Tag>
+                            {blog.views !== null && blog.views !== undefined && (
+                              <Tag color="rgba(255,255,255,0.9)" style={{ color: '#1890ff', fontWeight: 'bold', border: 'none' }}>
+                                👁️ {blog.views}
+                              </Tag>
+                            )}
+                          </Space>
+                          {blog.category && (
+                            <Tag color="gold" style={{ fontWeight: 'bold' }}>
+                              {blog.category}
+                            </Tag>
+                          )}
+                        </div>
+                        {/* Title overlay at bottom */}
+                        {!blog.image_url && (
+                          <div style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            padding: '20px',
+                            background: 'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)'
+                          }}>
+                            <Title level={4} style={{ color: 'white', margin: 0, fontSize: 'clamp(1em, 3vw, 1.2em)' }}>
+                              {blog.title}
+                            </Title>
+                          </div>
+                        )}
+                      </div>
+                    }
                     style={{ 
                       height: '100%',
-                      borderRadius: '16px',
+                      borderRadius: '12px',
                       overflow: 'hidden',
-                      background: 'rgba(255, 255, 255, 0.98)',
-                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                      background: 'white',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                       transition: 'all 0.3s ease',
                       display: 'flex',
                       flexDirection: 'column'
                     }}
-                    styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column', height: '100%' } }}
+                    styles={{ body: { padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 } }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-8px)';
-                      e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15)';
+                      e.currentTarget.style.transform = 'translateY(-4px)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
                     }}
                   >
-                    {/* Header with gradient */}
-                    <div style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      padding: '20px',
-                      color: 'white'
-                    }}>
-                      <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                          <Tag 
-                            icon={<HeartFilled />} 
-                            color="rgba(255, 255, 255, 0.2)"
-                            style={{ 
-                              border: '1px solid rgba(255, 255, 255, 0.3)',
-                              color: 'white',
-                              fontWeight: 'bold'
-                            }}
-                          >
-                            {blog.likes} Likes
-                          </Tag>
-                          {blog.views !== null && blog.views !== undefined && (
-                            <Tag 
-                              color="rgba(255, 255, 255, 0.2)"
-                              style={{ 
-                                border: '1px solid rgba(255, 255, 255, 0.3)',
-                                color: 'white',
-                                fontWeight: 'bold'
-                              }}
-                            >
-                              👁️ {blog.views} Views
-                            </Tag>
-                          )}
-                        </div>
-                        <Title 
-                          level={4} 
-                          style={{ 
-                            color: 'white', 
-                            margin: 0,
-                            fontSize: 'clamp(1.1em, 3vw, 1.3em)',
-                            lineHeight: '1.4'
-                          }}
-                        >
+                    {/* Card Content */}
+                    <Space direction="vertical" size="middle" style={{ width: '100%', flex: 1 }}>
+                      {/* Title (only if image exists) */}
+                      {blog.image_url && (
+                        <Title level={4} style={{ margin: 0, fontSize: 'clamp(1em, 3vw, 1.2em)', color: '#262626' }}>
                           {blog.title}
                         </Title>
-                        {blog.category && (
-                          <Tag color="gold" style={{ fontSize: '12px' }}>
-                            📁 {blog.category}
-                          </Tag>
-                        )}
-                      </Space>
-                    </div>
-
-                    {/* Content */}
-                    <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      <Space direction="vertical" size="middle" style={{ width: '100%', flex: 1 }}>
-                        {/* URL */}
-                        {blog.url && (
-                          <div>
-                            <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginBottom: '4px' }}>
-                              <LinkOutlined /> Link
-                            </Text>
-                            <Tooltip title={blog.url}>
-                              <a 
-                                href={blog.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                style={{ 
-                                  fontSize: 'clamp(13px, 2.5vw, 14px)',
-                                  color: '#667eea',
-                                  wordBreak: 'break-all'
-                                }}
-                              >
-                                {blog.url.length > 40 ? blog.url.substring(0, 40) + '...' : blog.url}
-                              </a>
-                            </Tooltip>
-                          </div>
-                        )}
-
-                        {/* Author */}
-                        <div>
-                          <Space>
-                            <Avatar 
-                              icon={<UserOutlined />} 
-                              style={{ backgroundColor: '#667eea' }}
-                              size="small"
-                            />
-                            <Text strong style={{ fontSize: 'clamp(13px, 2.5vw, 14px)' }}>
-                              {blog.username}
-                            </Text>
-                          </Space>
-                        </div>
-
-                        <Divider style={{ margin: '8px 0' }} />
-
-                        {/* Actions */}
-                        <Space 
-                          direction="vertical" 
-                          size="small" 
-                          style={{ width: '100%' }}
+                      )}
+                      
+                      {/* Description */}
+                      {blog.description && (
+                        <Paragraph 
+                          ellipsis={{ rows: 2 }} 
+                          style={{ margin: 0, color: '#595959', fontSize: '14px' }}
                         >
-                          <Button 
-                            type="primary"
-                            block
-                            icon={<ReadOutlined />}
-                            onClick={() => navigate(`/blogs/${blog.id}`)}
-                            style={{ 
-                              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                              borderColor: 'transparent',
-                              fontWeight: '600',
-                              fontSize: 'clamp(13px, 2.5vw, 14px)'
-                            }}
-                            size="middle"
-                          >
-                            Read Full Blog
-                          </Button>
-                          
-                          <Space wrap style={{ width: '100%', justifyContent: 'space-between' }}>
-                            <Space size="small">
-                              <Tooltip title="Like this blog">
-                                <Button 
-                                  type="primary"
-                                  icon={<LikeOutlined />}
-                                  onClick={() => handleLikeChange(blog.id, blog.likes, true, blog.title)}
-                                  style={{ 
-                                    background: '#52c41a',
-                                    borderColor: '#52c41a',
-                                    fontSize: 'clamp(12px, 2vw, 14px)'
-                                  }}
-                                  size="small"
-                                >
-                                  Like
-                                </Button>
-                              </Tooltip>
-                              <Tooltip title="Dislike this blog">
-                                <Button 
-                                  danger
-                                  icon={<DislikeOutlined />}
-                                  onClick={() => handleLikeChange(blog.id, blog.likes, false, blog.title)}
-                                  style={{ fontSize: 'clamp(12px, 2vw, 14px)' }}
-                                  size="small"
-                                >
-                                  Dislike
-                                </Button>
-                              </Tooltip>
-                            </Space>
-                          </Space>
+                          {blog.description}
+                        </Paragraph>
+                      )}
 
-                          {/* Reading List Button - Changes based on status */}
-                          {readingListBlogs.has(blog.id) ? (
-                            <Button 
-                              block
-                              icon={<BookOutlined />}
-                              onClick={() => removeBlogFromReadingList(blog.id, blog.title)}
-                              style={{ 
-                                background: '#52c41a',
-                                borderColor: '#52c41a',
-                                color: 'white',
-                                fontSize: 'clamp(12px, 2vw, 14px)',
-                                fontWeight: '600'
-                              }}
-                              size="small"
-                            >
-                              ✓ In Reading List - Click to Remove
-                            </Button>
-                          ) : (
-                            <Button 
-                              block
-                              icon={<BookOutlined />}
-                              onClick={() => addBlogToReadingList(blog.id, blog.title)}
-                              style={{ 
-                                borderColor: '#667eea',
-                                color: '#667eea',
-                                fontSize: 'clamp(12px, 2vw, 14px)'
-                              }}
-                              size="small"
-                            >
-                              Add to Reading List
-                            </Button>
-                          )}
-
-                          {/* Delete Button - Only for owner */}
-                          {userId === blog.userid && (
-                            <Button 
-                              block
-                              danger
-                              type="primary"
-                              icon={<DeleteOutlined />}
-                              onClick={() => handleDeleteClick(blog)}
-                              style={{ fontSize: 'clamp(12px, 2vw, 14px)' }}
-                              size="small"
-                            >
-                              Delete Blog
-                            </Button>
-                          )}
-                        </Space>
+                      {/* Author */}
+                      <Space size="small">
+                        <Avatar icon={<UserOutlined />} size="small" style={{ backgroundColor: '#667eea' }} />
+                        <Text strong style={{ fontSize: '13px', color: '#595959' }}>
+                          {blog.username}
+                        </Text>
                       </Space>
-                    </div>
+
+                      <Divider style={{ margin: '8px 0' }} />
+
+                      {/* Action Buttons - Clean Button Group */}
+                      <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                        <Button 
+                          type="primary"
+                          block
+                          size="large"
+                          icon={<ReadOutlined />}
+                          onClick={() => navigate(`/blogs/${blog.id}`)}
+                          style={{ 
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            border: 'none',
+                            fontWeight: '600',
+                            height: '40px'
+                          }}
+                        >
+                          Read Blog
+                        </Button>
+                        
+                        <Space.Compact block>
+                          <Button 
+                            icon={<LikeOutlined />}
+                            onClick={() => handleLikeChange(blog.id, blog.likes, true, blog.title)}
+                            style={{ flex: 1, color: '#52c41a', borderColor: '#52c41a' }}
+                          >
+                            Like
+                          </Button>
+                          <Button 
+                            icon={<DislikeOutlined />}
+                            onClick={() => handleLikeChange(blog.id, blog.likes, false, blog.title)}
+                            danger
+                            style={{ flex: 1 }}
+                          >
+                            Dislike
+                          </Button>
+                        </Space.Compact>
+
+                        {readingListBlogs.has(blog.id) ? (
+                          <Button 
+                            block
+                            icon={<BookOutlined />}
+                            onClick={() => removeBlogFromReadingList(blog.id, blog.title)}
+                            style={{ 
+                              background: '#52c41a',
+                              borderColor: '#52c41a',
+                              color: 'white',
+                              fontWeight: '600'
+                            }}
+                          >
+                            ✓ In Reading List
+                          </Button>
+                        ) : (
+                          <Button 
+                            block
+                            icon={<BookOutlined />}
+                            onClick={() => addBlogToReadingList(blog.id, blog.title)}
+                          >
+                            Add to Reading List
+                          </Button>
+                        )}
+
+                        {userId === blog.userid && (
+                          <Button 
+                            block
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => handleDeleteClick(blog)}
+                          >
+                            Delete Blog
+                          </Button>
+                        )}
+                      </Space>
+                    </Space>
                   </Card>
                 </Col>
               ))}
