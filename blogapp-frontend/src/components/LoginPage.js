@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   Layout, 
@@ -33,17 +33,25 @@ const LoginPage = () => {
     setError(null);
   
     try {
-      const response = await axios.post('https://blogapp-backend-e23a.onrender.com/api/login', {
+      const response = await axios.post('/login', {
         username: values.username,
         password: values.password,
       });
   
       localStorage.setItem('userToken', response.data.token);
       localStorage.setItem('userId', response.data.id);
+      localStorage.setItem('username', response.data.username);
   
       navigate('/blogs');
     } catch (error) {
-      setError('Invalid username or password. Please try again.');
+      console.error('Login error:', error);
+      if (error.response && error.response.status === 401) {
+        setError('Invalid username or password. Please try again.');
+      } else if (error.response && error.response.status === 429) {
+        setError('Too many login attempts. Please try again in 15 minutes.');
+      } else {
+        setError('Login failed. Please try again later.');
+      }
       setLoading(false);
     }
   };

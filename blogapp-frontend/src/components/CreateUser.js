@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   Layout, 
@@ -40,7 +40,7 @@ const CreateUser = () => {
     setError(null);
 
     try {
-      const response = await axios.post('https://blogapp-backend-e23a.onrender.com/api/users', {
+      const response = await axios.post('/users', {
         name: values.name,
         username: values.username,
         password: values.password,
@@ -58,7 +58,13 @@ const CreateUser = () => {
       }
     } catch (error) {
       console.error('Failed to add user', error);
-      setError(error.response?.data?.error || 'Failed to create account. Username might already exist.');
+      if (error.response && error.response.status === 429) {
+        setError('Too many registration attempts. Please try again in an hour.');
+      } else if (error.response && error.response.status === 409) {
+        setError('Username already exists. Please choose a different username.');
+      } else {
+        setError(error.response?.data?.error || 'Failed to create account. Please try again.');
+      }
       setLoading(false);
     }
   };
