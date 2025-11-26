@@ -7,10 +7,10 @@ const sql = require('mssql');
 require('dotenv').config();
 
 const config = {
-    user: 'kingdat4',
-    password: 'SecretPassword2023',
-    server: 'stone900.database.windows.net', 
-    database: 'GreenlizardDb',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER, 
+    database: process.env.DB_DATABASE,
     options: {
         encrypt: true
     }
