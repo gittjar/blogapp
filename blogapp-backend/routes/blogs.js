@@ -25,24 +25,23 @@ router.get('/', async (req, res) => {
     FORMAT(blogs.updated_at, 'yyyy-MM-dd HH:mm:ss') as formatted_updated_at
   FROM blogs 
   JOIN users ON blogs.userid = users.id`;
-  
-  let params = [];
-
-  if (search) {
-    query += ' WHERE title LIKE @search OR author LIKE @search OR category LIKE @search';
-    params.push({name: 'search', value: `%${search}%`});
-  }
-
-  query += ' ORDER BY blogs.created_at DESC';
 
   try {
     let pool = await sql.connect(config);
-    let result = await pool.request()
-      .query(query);
+    let request = pool.request();
+    
+    if (search) {
+      query += ' WHERE title LIKE @search OR author LIKE @search OR category LIKE @search';
+      request.input('search', sql.NVarChar, `%${search}%`);
+    }
+
+    query += ' ORDER BY blogs.created_at DESC';
+    
+    let result = await request.query(query);
 
     res.json(result.recordset);
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching blogs:', err);
     res.status(500).send('Error executing query');
   }
 });

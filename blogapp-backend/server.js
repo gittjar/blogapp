@@ -15,6 +15,11 @@ app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/reading-list', readingListRouter);
 
+// Api = root endpoint
+app.get('/api/', (req, res) => {
+  res.send('Welcome to the Blog App API');
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
