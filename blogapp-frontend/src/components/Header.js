@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button, Space, Typography, Drawer } from 'antd';
 import { 

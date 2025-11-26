@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axiosConfig';
 import {
   Layout,
   Card,
@@ -47,7 +47,7 @@ const BlogDetail = () => {
 
   const fetchBlog = async () => {
     try {
-      const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`);
+      const response = await axios.get(`/blogs/${id}`);
       setBlog(response.data);
       setLoading(false);
     } catch (error) {
@@ -61,14 +61,7 @@ const BlogDetail = () => {
     if (!userId) return;
     
     try {
-      const response = await axios.get(
-        `https://blogapp-backend-e23a.onrender.com/api/reading-list/check?blogIds=${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-          },
-        }
-      );
+      const response = await axios.get(`/reading-list/check?blogIds=${id}`);
       setInReadingList(response.data.length > 0);
     } catch (error) {
       console.error('Failed to check reading list status', error);
