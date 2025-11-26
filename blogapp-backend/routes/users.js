@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
-const sha256 = require('crypto-js/sha256');
-const hmacSHA512 = require('crypto-js/hmac-sha512');
-const Base64 = require('crypto-js/enc-base64');
+const bcrypt = require('bcrypt');
 const getUserFromToken = require('../middleware/getUserFromToken');
 require('dotenv').config();
 
@@ -21,21 +19,38 @@ const config = {
 router.post('/', async (req, res) => {
   const { name, username, password } = req.body;
 
-  // hash the password
-  const hashDigest = sha256(password);
-  const hashedPassword = Base64.stringify(hmacSHA512(password + hashDigest, password));
+  // Validate input
+  if (!name || !username || !password) {
+    return res.status(400).json({ error: 'Name, username, and password are required' });
+  }
 
-  let pool = await sql.connect(config);
-  let result = await pool.request()
-    .input('name', sql.NVarChar, name)
-    .input('username', sql.NVarChar, username)
-    .input('password', sql.NVarChar, hashedPassword)
-    .query('INSERT INTO users (name, username, password) VALUES (@name, @username, @password)');
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
+  }
 
-  if (result.rowsAffected[0] > 0) {
-    res.status(201).send('User added');
-  } else {
-    res.status(500).send('Error executing query');
+  try {
+    // Hash the password with bcrypt (10 salt rounds)
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let pool = await sql.connect(config);
+    let result = await pool.request()
+      .input('name', sql.NVarChar, name)
+      .input('username', sql.NVarChar, username)
+      .input('password', sql.NVarChar, hashedPassword)
+      .query('INSERT INTO users (name, username, password) VALUES (@name, @username, @password)');
+
+    if (result.rowsAffected[0] > 0) {
+      res.status(201).json({ message: 'User created successfully' });
+    } else {
+      res.status(500).json({ error: 'Error creating user' });
+    }
+  } catch (err) {
+    console.error('Error creating user:', err);
+    if (err.message.includes('duplicate') || err.message.includes('UNIQUE')) {
+      res.status(409).json({ error: 'Username already exists' });
+    } else {
+      res.status(500).json({ error: 'Error creating user' });
+    }
   }
 });
 
