@@ -14,7 +14,7 @@ app.use(cors());
 // Rate limiting for login endpoint - prevent brute force attacks
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 login requests per windowMs
+  max: 10, // Increased to 10 login attempts per 15 minutes
   message: 'Too many login attempts, please try again after 15 minutes',
   standardHeaders: true,
   legacyHeaders: false,
@@ -23,7 +23,7 @@ const loginLimiter = rateLimit({
 // Rate limiting for user creation - prevent spam
 const createAccountLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // Limit each IP to 3 account creations per hour
+  max: 5, // Increased to 5 account creations per hour
   message: 'Too many accounts created, please try again after an hour',
   standardHeaders: true,
   legacyHeaders: false,
@@ -32,16 +32,22 @@ const createAccountLimiter = rateLimit({
 // General API rate limiter
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 200, // Increased to 200 requests per 15 minutes
   message: 'Too many requests, please try again later',
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-// Apply rate limiters
-app.use('/api/login', loginLimiter);
-app.use('/api/users', createAccountLimiter);
-app.use('/api/', apiLimiter); // Apply to all API routes
+// Apply rate limiters - order matters!
+app.use('/api/login', loginLimiter); // Specific: login only
+app.use('/api/users', (req, res, next) => {
+  // Only apply createAccountLimiter to POST requests (user creation)
+  if (req.method === 'POST') {
+    return createAccountLimiter(req, res, next);
+  }
+  next();
+});
+app.use('/api/', apiLimiter); // General: all API routes
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
