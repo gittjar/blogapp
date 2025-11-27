@@ -38,11 +38,7 @@ const UserData = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://blogapp-backend-e23a.onrender.com/api/users', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-          },
-        });
+        const response = await axios.get('/users');
         setUsers(response.data);
       } catch (error) {
         console.error('Failed to fetch users', error);
@@ -55,13 +51,7 @@ const UserData = () => {
   const fetchUserData = async () => {
     if (userId) {
       try {
-        const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-
-          },
-          
-        });
+        const response = await axios.get(`/users/${userId}`);
         console.log(response.data); 
         setUserData(response.data);
       } catch (error) {
@@ -85,11 +75,7 @@ const UserData = () => {
 
   const removeBlogFromReadingList = async (readingListId) => {
     try {
-      await axios.delete(`https://blogapp-backend-e23a.onrender.com/api/reading-list/${readingListId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
-      });
+      await axios.delete(`/reading-list/${readingListId}`);
       message.success('Blog removed from reading list');
       fetchUserData();
     } catch (error) {
@@ -100,12 +86,8 @@ const UserData = () => {
 
   const handleReadChange = async (readingListId, read) => {
     try {
-      await axios.put(`https://blogapp-backend-e23a.onrender.com/api/reading-list/${readingListId}`, {
+      await axios.put(`/reading-list/${readingListId}`, {
         read: !read
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
       });
       message.success('Reading status updated');
       fetchUserData();
