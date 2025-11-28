@@ -215,7 +215,20 @@ const BlogDetail = () => {
                     <Space>
                       <CalendarOutlined style={{ color: '#667eea' }} />
                       <Text type="secondary">
-                        {new Date(blog.created_at).toLocaleDateString('en-US', {
+                        Created: {new Date(blog.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </Text>
+                    </Space>
+                  )}
+
+                  {blog.updated_at && blog.updated_at !== blog.created_at && (
+                    <Space>
+                      <CalendarOutlined style={{ color: '#faad14' }} />
+                      <Text type="secondary">
+                        Updated: {new Date(blog.updated_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
