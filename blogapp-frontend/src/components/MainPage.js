@@ -19,7 +19,7 @@ const MainPage = () => {
   useEffect(() => {
     const wakeUpServer = async () => {
       try {
-        await axios.get('https://blogapp-backend-e23a.onrender.com/api/blogs');
+        await axios.get('/blogs');
       } catch (err) {
         console.error('Failed to wake up server', err);
       }

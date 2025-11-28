@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from '../utils/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   Layout, 
   Card, 
@@ -50,11 +50,7 @@ const CreateBlog = () => {
     const userToken = localStorage.getItem('userToken');
 
     try {
-      const response = await axios.post('https://blogapp-backend-e23a.onrender.com/api/blogs', blog, {
-        headers: {
-          'Authorization': `Bearer ${userToken}`
-        }
-      });
+      const response = await axios.post('/blogs', blog);
 
       if (response.status === 201) {
         message.success('🎉 Blog created successfully!');
@@ -79,7 +75,7 @@ const CreateBlog = () => {
       <Layout style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Card>
           <Text style={{ fontSize: '1.2rem' }}>
-            Please <a href="/login">log in</a> to create a blog.
+            Please <Link to="/login">log in</Link> to create a blog.
           </Text>
         </Card>
       </Layout>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   Layout, 
   Card, 
@@ -45,11 +45,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get('https://blogapp-backend-e23a.onrender.com/api/blogs', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-          },
-        });
+        const response = await axios.get('/blogs');
         setBlogs(response.data);
         
         // Check which blogs are in reading list
@@ -57,12 +53,7 @@ const BlogPage = () => {
           const blogIds = response.data.map(blog => blog.id).join(',');
           try {
             const readingListResponse = await axios.get(
-              `https://blogapp-backend-e23a.onrender.com/api/reading-list/check?blogIds=${blogIds}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-                },
-              }
+              `/reading-list/check?blogIds=${blogIds}`
             );
             const readingMap = new Map();
             readingListResponse.data.forEach(item => {
@@ -86,18 +77,10 @@ const BlogPage = () => {
 
   const handleLikeChange = async (id, likes, increment, blogName) => {
     try {
-      await axios.put(`https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`, {
+      await axios.put(`/blogs/${id}`, {
         likes: increment ? likes + 1 : Math.max(0, likes - 1),
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
       });
-      const response = await axios.get('https://blogapp-backend-e23a.onrender.com/api/blogs', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
-      });
+      const response = await axios.get('/blogs');
       setBlogs(response.data);
       message.success(`${increment ? '👍 Liked' : '👎 Disliked'} "${blogName}"`);
     } catch (error) {
@@ -114,12 +97,8 @@ const BlogPage = () => {
     }
 
     try {
-      await axios.post('https://blogapp-backend-e23a.onrender.com/api/reading-list', {
+      await axios.post('/reading-list', {
         blogId: blogId
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
       });
       
       // Update local state to show it's in reading list
@@ -138,11 +117,7 @@ const BlogPage = () => {
 
   const removeBlogFromReadingList = async (blogId, blogName) => {
     try {
-      await axios.delete(`https://blogapp-backend-e23a.onrender.com/api/reading-list/blog/${blogId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
-      });
+      await axios.delete(`/reading-list/blog/${blogId}`);
       
       // Update local state to remove from reading list
       const newMap = new Map(readingListBlogs);
@@ -166,11 +141,7 @@ const BlogPage = () => {
       cancelText: 'Cancel',
       onOk: async () => {
         try {
-          await axios.delete(`https://blogapp-backend-e23a.onrender.com/api/blogs/${blog.id}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-            },
-          });
+          await axios.delete(`/blogs/${blog.id}`);
           setBlogs(blogs.filter(b => b.id !== blog.id));
           message.success(`🗑️ "${blog.title}" deleted successfully`);
         } catch (error) {
@@ -219,7 +190,7 @@ const BlogPage = () => {
               <Empty
                 description={
                   <span>
-                    No blogs yet. <a href="/create-blog">Create the first one!</a>
+                    No blogs yet. <Link to="/create-blog">Create the first one!</Link>
                   </span>
                 }
               />

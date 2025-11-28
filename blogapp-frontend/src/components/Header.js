@@ -27,11 +27,7 @@ const Header = () => {
     const fetchUserData = async () => {
       if (userId) {
         try {
-          const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/users/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-            },
-          });
+          const response = await axios.get(`/users/${userId}`);
           setUserData(response.data);
         } catch (error) {
           console.error('Failed to fetch user data', error);

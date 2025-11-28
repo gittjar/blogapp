@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axiosConfig';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { 
   Layout, 
   Card, 
@@ -43,7 +43,7 @@ const EditBlog = () => {
 
   const fetchBlog = async () => {
     try {
-      const response = await axios.get(`https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`);
+      const response = await axios.get(`/blogs/${id}`);
       const blog = response.data;
       
       // Check if user is the owner
@@ -89,13 +89,8 @@ const EditBlog = () => {
 
     try {
       const response = await axios.put(
-        `https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`,
-        updatedBlog,
-        {
-          headers: {
-            'Authorization': `Bearer ${userToken}`
-          }
-        }
+        `/blogs/${id}`,
+        updatedBlog
       );
 
       if (response.status === 200) {
@@ -117,7 +112,7 @@ const EditBlog = () => {
       <Layout style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Card>
           <Text style={{ fontSize: '1.2rem' }}>
-            Please <a href="/login">log in</a> to edit blogs.
+            Please <Link to="/login">log in</Link> to edit blogs.
           </Text>
         </Card>
       </Layout>

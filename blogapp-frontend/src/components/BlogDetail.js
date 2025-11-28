@@ -78,13 +78,8 @@ const BlogDetail = () => {
 
     try {
       await axios.put(
-        `https://blogapp-backend-e23a.onrender.com/api/blogs/${id}`,
-        { likes: blog.likes + 1 },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
+        `/blogs/${id}`,
+        { likes: blog.likes + 1 }
       );
       setBlog({ ...blog, likes: blog.likes + 1 });
       setLiked(true);
@@ -104,13 +99,8 @@ const BlogDetail = () => {
 
     try {
       await axios.post(
-        'https://blogapp-backend-e23a.onrender.com/api/reading-list',
-        { blogId: parseInt(id) },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-          },
-        }
+        '/reading-list',
+        { blogId: parseInt(id) }
       );
       setInReadingList(true);
       message.success('📚 Added to reading list!');
@@ -127,12 +117,7 @@ const BlogDetail = () => {
   const removeFromReadingList = async () => {
     try {
       await axios.delete(
-        `https://blogapp-backend-e23a.onrender.com/api/reading-list/blog/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-          },
-        }
+        `/reading-list/blog/${id}`
       );
       setInReadingList(false);
       message.success('🗑️ Removed from reading list!');
